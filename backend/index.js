@@ -1,5 +1,7 @@
 import express from "express";
 import { configDotenv } from "dotenv";
+import mongoose from "mongoose";
+
 import userRouter from "./routes/user.js";
 
 configDotenv();
@@ -7,12 +9,14 @@ configDotenv();
 const app = express();
 const port = process.env.port || 3000;
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+mongoose.connect(process.env.MONGO_URI).then(() => {
+  app.get("/", (req, res) => {
+    res.send("Hello World!");
+  });
 
-app.use("/users", userRouter);
+  app.use("/users", userRouter);
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`);
+  });
 });
