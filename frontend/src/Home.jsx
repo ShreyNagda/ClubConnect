@@ -1,7 +1,14 @@
 import { Link } from "react-router-dom";
+import CarouselItem from "./Components/CarouselItem";
 
 function Home() {
-  return <div className="min-h-screen bg-emerald-400"></div>;
+  return (
+    <div className="">
+      <div className="carousel">
+        <CarouselItem />
+      </div>
+    </div>
+  );
 }
 
 export default Home;
