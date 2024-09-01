@@ -3,10 +3,15 @@ import { Link } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 import FilledButton from "./FilledButton";
 import OutlinedButton from "./OutlinedButton";
+import NavLink from "./NavLink";
 
 function Navbar() {
+  console.log();
   const navRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(
+    window.location.href.split("/").reverse()[0]
+  );
 
   const handleNavClick = (open) => {
     setIsOpen(!open);
@@ -33,9 +38,30 @@ function Navbar() {
           ref={navRef}
           className="hidden gap-5 items-center justify-end lg:flex"
         >
-          <Link to={"/"}>Home</Link>
-          <Link to={"/clubs"}>Clubs</Link>
-          <Link to={"/"}>Societies</Link>
+          <NavLink
+            to={"/"}
+            text={"Home"}
+            selected={selectedItem == ""}
+            onClick={() => {
+              setSelectedItem("");
+            }}
+          />
+          <NavLink
+            to={"/clubs"}
+            text={"Clubs"}
+            selected={selectedItem == "clubs"}
+            onClick={() => {
+              setSelectedItem("clubs");
+            }}
+          />
+          <NavLink
+            to={"/societies"}
+            text={"Societies"}
+            selected={selectedItem == "societies"}
+            onClick={() => {
+              setSelectedItem("societies");
+            }}
+          />
           <FilledButton text="Login" onClick={() => login(true)} />
           <OutlinedButton text="Sign Up" onClick={() => signup(true)} />
         </nav>
