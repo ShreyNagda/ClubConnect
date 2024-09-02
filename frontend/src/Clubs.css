@@ -7,9 +7,9 @@ body {
 
 .clubs-container {
   max-width: 1200px;
-  margin: 40px auto;
+  /* margin: 40px auto; */
   padding: 20px;
-  background-color: #fff;
+  /* background-color: #fff;   */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -25,7 +25,6 @@ header h1 {
 }
 
 .about-clubs {
-  color: #5e5a5a;
   padding: 20px;
 }
 
