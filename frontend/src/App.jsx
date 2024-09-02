@@ -4,6 +4,7 @@ import Navbar from "./Components/Navbar";
 import Clubs from "./Clubs";
 import Societies from "./Societies";
 import Footer from "./Components/Footer";
+import ClubPage from "./Components/ClubPage";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Route path="/" Component={Home} />
             <Route path="/clubs" Component={Clubs} />
             <Route path="/societies" Component={Societies} />
+            <Route path="/clubs/:slug" Component={ClubPage} />
           </Routes>
         </div>
         <Footer />
