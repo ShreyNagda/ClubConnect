@@ -1,29 +1,10 @@
 import React from "react";
-import ClubTile from "./ClubTile";
+import ClubTile from "./Components/ClubTile";
 import { useNavigate } from "react-router-dom";
+import { clubs } from "./utils/data";
 
 function Clubs() {
   const navigate = useNavigate();
-  const clubs = [
-    {
-      logo: "clubs/cybersec.jpg",
-      name: "CyberSecurity",
-      year: 2014,
-      slug: "cybersecurity",
-    },
-    {
-      logo: "clubs/aiml.jpg",
-      name: "Artificial Intelligence & Machine Learning",
-      year: 2015,
-      slug: "aiml",
-    },
-    {
-      logo: "clubs/gdsc.jpg",
-      name: "Google Developers Students Club",
-      year: 2016,
-      slug: "gdsc",
-    },
-  ];
   return (
     <div className="p-2">
       <header className="p-3 bg-[#337ab7]">
@@ -41,19 +22,21 @@ function Clubs() {
           enhance your campus life!
         </p>
       </section>
-      <section className="p-3 grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1 items-center gap-3">
-        <h2 className="text-2xl font-semibold py-1">Our Clubs</h2>
-        {clubs.map((club) => (
-          <ClubTile
-            key={club.name}
-            name={club.name}
-            logo={club.logo}
-            year={club.year}
-            onclick={() => {
-              navigate(`/clubs/${club.slug}`);
-            }}
-          />
-        ))}
+      <section className="p-3">
+        <h2 className="text-2xl font-semibold py-2">Our Clubs</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1 items-center gap-3">
+          {clubs.map((club) => (
+            <ClubTile
+              key={club.name}
+              name={club.name}
+              logo={club.logo}
+              year={club.year}
+              onclick={() => {
+                navigate(`/clubs/${club.slug}`);
+              }}
+            />
+          ))}
+        </div>
       </section>
     </div>
   );
