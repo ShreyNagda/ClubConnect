@@ -1,5 +1,5 @@
 import { useReducer, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 import FilledButton from "./FilledButton";
 import OutlinedButton from "./OutlinedButton";
@@ -7,6 +7,7 @@ import NavLink from "./NavLink";
 
 function Navbar() {
   console.log();
+  const navigate=useNavigate();
   const navRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(
@@ -19,9 +20,11 @@ function Navbar() {
   };
 
   const login = () => {
+    navigate("/login");
     console.log("Login");
   };
   const signup = () => {
+    navigate("/signup")
     console.log("Signup");
   };
 
