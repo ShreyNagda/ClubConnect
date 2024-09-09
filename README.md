@@ -33,7 +33,7 @@ This project is a College Club Management System developed using the MERN stack 
 # Installation and Usage
 ### Clone the repository:
 
-git clone [https://github.com/ShreyNagda/ClubConnect.git]
+git clone https://github.com/ShreyNagda/ClubConnect.git
 
 ### Install dependencies:
 
