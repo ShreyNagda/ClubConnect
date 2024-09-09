@@ -2,27 +2,27 @@
 This project is a College Club Management System developed using the MERN stack (MongoDB, Express, React, Node.js). It serves as a centralized platform for all college clubs, enabling students to easily access and participate in club activities.
 
 # Features
-## Club Directory:
+### Club Directory:
 
   1. Browse a comprehensive list of all college clubs.
   2. View club details, including descriptions, members, and upcoming events.
-## User Registration and Login:
+### User Registration and Login:
 
   1. Create a user account using email and password.
   2. Log in to access club features and participate in activities.
-## Club Membership:
+### Club Membership:
 
   1. Join clubs of interest.
   2. View club member profiles and interact with other members.
-## Event Management:
+### Event Management:
 
   1. Clubs can create and manage events, including setting dates, times, and locations.
   2. Students can register for events they want to attend.
-## Attendance Tracking:
+### Attendance Tracking:
 
   1. Attendance is monitored for events.
   2. Data can be analyzed for insights and reporting.
-## Event Comments:
+### Event Comments:
 
   1. Students can leave comments on events they have attended after the event concludes.
   2. Share feedback, experiences, and discussions.
