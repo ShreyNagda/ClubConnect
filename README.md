@@ -35,15 +35,16 @@ This project is a College Club Management System developed using the MERN stack 
 
 git clone https://github.com/ShreyNagda/ClubConnect.git
 
-### Install dependencies:
+### Starting backend server:
 
-cd college-club-management-system
+cd ClubConnect/backend
 npm install
-
-### Start the development server:
-
 npm start
-Use code with caution.
+
+### Starting frontend server
+cd ClubConnect/frontend
+npm install
+npm run dev
 
 The application will be accessible at http://localhost:5173.
 
