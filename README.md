@@ -27,9 +27,9 @@ This project is a College Club Management System developed using the MERN stack 
   1. Students can leave comments on events they have attended after the event concludes.
   2. Share feedback, experiences, and discussions.
 # Technologies Used
-Frontend: React.js
-Backend: Node.js, Express.js
-Database: MongoDB
+- Frontend: React.js
+- Backend: Node.js, Express.js
+- Database: MongoDB
 # Installation and Usage
 ### Clone the repository:
 
