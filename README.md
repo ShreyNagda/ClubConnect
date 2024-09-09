@@ -45,7 +45,7 @@ npm install
 npm start
 Use code with caution.
 
-The application will be accessible at http://localhost:3000.
+The application will be accessible at http://localhost:5173.
 
 Contributing
 Contributions are welcome! Please follow these guidelines:
