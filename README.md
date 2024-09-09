@@ -31,17 +31,16 @@ Frontend: React.js
 Backend: Node.js, Express.js
 Database: MongoDB
 # Installation and Usage
-Clone the repository:
+### Clone the repository:
 
-1. Bash
 git clone <repository-url>
 
-2. Install dependencies:
+### Install dependencies:
 
 cd college-club-management-system
 npm install
 
-3. Start the development server:
+### Start the development server:
 
 npm start
 Use code with caution.
