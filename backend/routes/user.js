@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { createNewUser, getAllUsers, getUserById } from "../database/user";
+import {
+  getAllUsers,
+  getUserById,
+  loginUser,
+  registerUser,
+} from "../database/user.js";
 const userRouter = Router();
 
 userRouter.get("/", (req, res) => {
@@ -7,14 +12,17 @@ userRouter.get("/", (req, res) => {
   res.send("List of users");
 });
 
-userRouter.post("/", (req, res) => {
-  // Handle user creation
-  createNewUser();
-  res.send("Register new user");
+userRouter.post("/register", async (req, res) => {
+  const result = await registerUser(req.body);
+  res.send(result);
+});
+
+userRouter.post("/login", async (req, res) => {
+  const result = await loginUser(req.body);
+  res.send(result);
 });
 
 userRouter.get("/:id", (req, res) => {
-  // Handle fetching a specific user
   getUserById();
   res.send("Get user by id");
 });

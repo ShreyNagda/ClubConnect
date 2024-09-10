@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { category, clubRef, eventRef, userRef } from "../utils/strings";
+import { category, clubRef, eventRef, userRef } from "../utils/strings.js";
 
 const clubSchema = mongoose.Schema({
   title: { type: String, required: true, unique: true },

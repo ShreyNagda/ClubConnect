@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
-import { clubRef, db_role, user_role, userRef } from "../utils/strings";
+import { clubRef, db_role, user_role, userRef } from "../utils/strings.js";
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  email: { type: String, required: true },
-  phone: { type: Number, required: true },
+  email: { type: String, required: true, unique: true },
+  phone: { type: Number, required: true, unique: true },
   password: { type: String, required: true },
   db_role: { type: String, required: true, default: db_role },
   user_role: { type: String, required: true, default: user_role },
