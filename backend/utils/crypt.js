@@ -6,7 +6,8 @@ export async function generateHashPassword(plainTextPassword) {
     const hashedPassword = await bcrypt.hash(plainTextPassword, salt);
     return hashedPassword;
   } catch (err) {
-    return null;
+    console.log(err);
+    return err;
   }
 }
 

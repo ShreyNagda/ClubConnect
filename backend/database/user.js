@@ -1,6 +1,6 @@
 import User from "../models/user.js";
 import { checkHashedPassword, generateHashPassword } from "../utils/crypt.js";
-import { status } from "../utils/strings.js";
+import jwt from "jsonwebtoken";
 
 export function getAllUsers() {
   console.log("Get all users");
@@ -14,13 +14,19 @@ export async function registerUser(data) {
   if (!data) {
     return { status: 500, message: "Data cannot be null" };
   } else {
-    var hashedPassword = await generateHashPassword(data["password"]);
-    if (hashedPassword == null) {
-      hashedPassword = await generateHashPassword(data["password"]);
-    }
-    const newUser = User({ ...data, password: hashedPassword });
+    const { name, email, password } = data;
     try {
+      //Check if email already in use
+      const existingUser = User.findOne({ email });
+      if (existingUser) {
+      }
+      var hashedPassword = await generateHashPassword(data["password"]);
+      if (hashedPassword == null) {
+        hashedPassword = await generateHashPassword(data["password"]);
+      }
+      const newUser = User({ ...data, password: hashedPassword });
       await newUser.save();
+
       return {
         status: 201,
         message: "User registered successfully!",
@@ -48,6 +54,7 @@ export async function loginUser(data) {
       var isMatch = await checkHashedPassword(data["password"], user.password);
       if (isMatch) {
         //generate jwt token and return with the message
+        // const accessToken = await jwt.sign()
         return { status: 200, message: "User login successful" };
       } else {
         return { status: 401, message: "Invalid credentials" };
