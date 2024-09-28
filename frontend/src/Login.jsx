@@ -1,15 +1,30 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 // import "./Login.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [mailSent, setMailSent] = useState(false);
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login form submitted");
-    console.log(`Email: ${email}`);
-    console.log(`Password: ${password}`);
+    axios
+      .post(`${import.meta.env.VITE_BACKEND_URL}users/login`, {
+        email,
+        password,
+      })
+      .then((res) => {
+        if (res.status == 201) {
+          setMailSent(true);
+        } else if (res.status == 200) {
+          navigate("/");
+        }
+      });
   };
 
   return (
@@ -22,30 +37,38 @@ const Login = () => {
             className="w-20 h-20"
           />
         </div>
-        <form onSubmit={handleSubmit}>
-          <div className="flex flex-col mb-4">
-            <input
-              type="email"
-              placeholder="Email"
-              className="p-2 pl-2 text-sm text-black rounded-lg border border-[#000] focus:outline-none focus:ring-2 focus:ring-gray-600 w-full"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              className="p-2 pl-2 text-sm text-black border border-[#000] rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 w-full mt-4"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <button
-            type="submit"
-            className="text-white bg-[#337ab7] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-full"
-          >
-            Log In
-          </button>
-        </form>
+        {mailSent && (
+          <div className="text-black">Verification mail sent to {email}</div>
+        )}
+        {!mailSent && (
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-col mb-4">
+              {<p className="text-red-400">{error}</p>}
+              <input
+                type="email"
+                placeholder="Email"
+                className="p-2 pl-2 text-sm text-black rounded-lg border border-[#000] focus:outline-none focus:ring-2 focus:ring-gray-600 w-full"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                className="p-2 pl-2 text-sm text-black border border-[#000] rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 w-full mt-4"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="text-white bg-[#337ab7] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-full"
+            >
+              Log In
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );

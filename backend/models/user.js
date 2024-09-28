@@ -1,32 +1,38 @@
 import mongoose from "mongoose";
-import { clubRef, db_role, user_role, userRef } from "../utils/strings.js";
-import jwt from "jsonwebtoken";
 
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  phone: { type: Number, required: true, unique: true },
-  password: { type: String, required: true },
-  verified: { type: Boolean, default: false },
-  db_role: { type: String, required: true, default: db_role },
-  user_role: { type: String, required: true, default: user_role },
-  clubs: [{ type: mongoose.Schema.ObjectId, ref: clubRef }],
-  tokens: { type: Number, default: 0 },
-  is_active: { type: Boolean, required: true, default: false },
-  is_subscribed: { type: Boolean, required: true, default: false },
+const rewardSchema = new mongoose.Schema({
+  event: { type: mongoose.Schema.Types.ObjectId, ref: "Event" },
+  points: Number,
 });
 
-userSchema.methods.generateVerificationToken = function () {
-  const user = this;
-  const verificationToken = jwt.sign(
-    { user: user },
-    process.env.USER_VERIFICATION_KEY,
-    {
-      expiresIn: "7d",
-    }
-  );
-  return verificationToken;
-};
+const userSchema = new mongoose.Schema({
+  name: String,
+  username: { type: String, unique: true },
+  email: { type: String, unique: true },
+  password: String,
+  client_role: {
+    type: String,
+    enum: ["student", "faculty", "hod"],
+    default: "student",
+  }, // Default set to 'student'
+  db_role: {
+    type: String,
+    enum: ["user", "club_admin", "admin"],
+    default: "user",
+  }, // Default set to 'user'
+  clubs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Club" }],
+  events_attended: [{ type: mongoose.Schema.Types.ObjectId, ref: "Event" }],
+  rewards: [rewardSchema],
+  club_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Club",
+    required: function () {
+      // club_id is required if db_role is club_admin or admin, but client_role should not be 'student'
+      return this.db_role === "club_admin" || this.client_role === "faculty";
+    },
+  },
+});
 
-const User = mongoose.model(userRef, userSchema);
+const User = mongoose.model("User", userSchema);
+
 export default User;

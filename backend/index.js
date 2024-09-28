@@ -1,25 +1,32 @@
 import express from "express";
 import { configDotenv } from "dotenv";
 import mongoose from "mongoose";
-
-import userRouter from "./routes/user.js";
+import cors from "cors";
+import userRouter from "./routes/userRouter.js";
+import clubRouter from "./routes/clubRouter.js";
+import eventRouter from "./routes/eventRouter.js";
+import authRouter from "./routes/authRouter.js";
+import cookieParser from "cookie-parser";
 
 configDotenv();
 
 const app = express();
-const port = process.env.port || 3000;
+const PORT = process.env.port || 3000;
 
-mongoose.connect(process.env.MONGO_URI).then(() => {
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: false }));
+await mongoose.connect(process.env.MONGO_URI).then(() => {
+  console.log("Database Connected!");
+});
 
-  app.get("/", (req, res) => {
-    res.send("App listening!");
-  });
+app.use(express.json());
+app.use(cors());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
-  app.use("/users", userRouter);
+app.use("/api/auth", authRouter); // For user-related routes
+app.use("/api/users", userRouter); // For user-related routes
+app.use("/api/clubs", clubRouter); // For club-related routes
+app.use("/api/events", eventRouter); // For event-related routes
 
-  app.listen(port, () => {
-    console.log(`App listening on port ${port}`);
-  });
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
