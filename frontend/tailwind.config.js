@@ -3,6 +3,9 @@ export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      minHeight: {
+        screen: "calc(100vh - 96px - 56px)",
+      },
       fontFamily: {
         lato: ["Lato", "sans-serif"],
         roboto: ["Roboto", "sans-serif"],
