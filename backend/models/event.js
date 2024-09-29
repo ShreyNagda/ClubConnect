@@ -58,19 +58,15 @@ const eventSchema = new mongoose.Schema(
   },
   { toJSON: { getters: true }, toObject: { getters: true }, timestamps: true }
 ); // Enable getters for toJSON and toObject
-eventSchema.pre(
-  "save",
-  function (next) {
-    const currentDate = new Date();
-    if (this.date < currentDate) {
-      this.status = "ended";
-    } else {
-      this.status = "upcoming";
-    }
-    next();
-  },
-  { timestamps: true }
-);
+eventSchema.pre("save", function (next) {
+  const currentDate = new Date();
+  if (this.date < currentDate) {
+    this.status = "ended";
+  } else {
+    this.status = "upcoming";
+  }
+  next();
+});
 
 // Create the Event model
 const Event = mongoose.model("Event", eventSchema);

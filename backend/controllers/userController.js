@@ -23,12 +23,12 @@ export const createUser = async (req, res) => {
       expiresIn: "1d",
     });
     res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
+      httpOnly: false,
+      secure: false,
+      sameSite: "None",
       maxAge: 24 * 60 * 60 * 1000,
     });
-    res.status(201).json(user);
+    res.status(201).json({ token, user, isAdmin: user.db_role === "admin" });
   } catch (err) {
     res
       .status(500)
@@ -46,27 +46,32 @@ export const loginUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    const isMatch = bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
-    }
+    bcrypt.compare(password, user.password).then((isMatch) => {
+      if (!isMatch) {
+        return res.status(400).json({ message: "Invalid credentials" });
+      }
+      // Create JWT token
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
+        expiresIn: "1d",
+      });
 
-    // Create JWT token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
-      expiresIn: "1d",
-    });
+      // Set token in HTTP-only cookie
+      res.cookie("token", token, {
+        httpOnly: false,
+        secure: false,
+        sameSite: "None",
+        maxAge: 24 * 60 * 60 * 1000,
+      });
 
-    // Set token in HTTP-only cookie
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      maxAge: 24 * 60 * 60 * 1000,
-    });
-
-    res.json({
-      message: "Login successful",
-      user: { id: user._id, username: user.username },
+      res.json({
+        message: "Login successful",
+        token: token,
+        user: {
+          id: user._id,
+          username: user.username,
+          isAdmin: user.db_role === "admin",
+        },
+      });
     });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });

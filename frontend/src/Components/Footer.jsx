@@ -1,6 +1,6 @@
 function Footer() {
   return (
-    <footer className="bg-black text-center p-4 text-white ">
+    <footer className="bg-black text-white text-center p-4 text-white ">
       <p>&copy; 2024 ClubConnect </p>
     </footer>
   );
