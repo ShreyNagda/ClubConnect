@@ -29,19 +29,36 @@ function Carousel() {
   };
 
   return (
-    <div className="relative top-[0px] w-full max-w-4xl mx-auto overflow-hidden">
+    <div className="relative top-[0px] w-full max-w-4xl mx-auto overflow-hidden py-2">
       {/* Carousel Wrapper */}
       <div
         className="flex transition-transform duration-500 ease-in-out"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
         {images.map((image, index) => (
-          <div className="min-w-full" key={index}>
+          <div
+            className={
+              "min-w-full relative" + `${image.url && "cursor-pointer"}`
+            }
+            key={index}
+            onClick={() => {
+              image.url === null || image.url === ""
+                ? null
+                : console.log("Hello");
+            }}
+          >
             <img
               src={image.image}
               className="w-full object-cover h-64 md:h-96 overflow-hidden"
               alt={image.text}
             />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
+
+            <div className="absolute inset-0 flex items-end justify-start m-2">
+              <h2 className="text-white text-lg md:text-xl truncate">
+                {image.text}
+              </h2>
+            </div>
           </div>
         ))}
       </div>
@@ -49,7 +66,7 @@ function Carousel() {
       {/* Left Arrow */}
       <button
         onClick={prevSlide}
-        className="absolute top-1/2 transform -translate-y-1/2 left-4 text-white bg-black bg-opacity-50 rounded-full p-2"
+        className="absolute top-1/2 transform -translate-y-1/2 left-4 text-white bg-black bg-opacity-50 rounded-full py-2 px-4"
       >
         &#10094;
       </button>
@@ -57,7 +74,7 @@ function Carousel() {
       {/* Right Arrow */}
       <button
         onClick={nextSlide}
-        className="absolute top-1/2 transform -translate-y-1/2 right-4 text-white bg-black bg-opacity-50 rounded-full p-2"
+        className="absolute top-1/2 transform -translate-y-1/2 right-4 text-white bg-black bg-opacity-50 rounded-full py-2 px-4"
       >
         &#10095;
       </button>

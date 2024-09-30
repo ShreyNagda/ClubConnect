@@ -11,11 +11,12 @@ const pastCoreTeamSchema = new mongoose.Schema({
 
 const clubSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true },
     description: String,
     established_year: { type: Number, required: true }, // Year the club was established
     type: { type: String, enum: ["club", "society"], default: "club" }, // Club or Society
     events_conducted: [{ type: mongoose.Schema.Types.ObjectId, ref: "Event" }],
+    logo: { type: String },
     // Core team as a map of position titles and user references
     core_team: {
       type: Map,

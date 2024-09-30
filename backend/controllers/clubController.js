@@ -1,9 +1,28 @@
+import sharp from "sharp";
 import Club from "../models/club.js";
 
 // Create a new club
 export const createClub = async (req, res) => {
   try {
+    console.log(req.body);
     const { name, description, established_year, type } = req.body;
+    // if (req.file) {
+    //   console.log(req.file);
+    //   const imageBuffer = req.file.buffer;
+    //   const compressedImage = await sharp(imageBuffer)
+    //     .resize(800) // Resize to 800px width (change as needed)
+    //     .jpeg({ quality: 70 }) // Compress to 70% quality (adjustable)
+    //     .toBuffer();
+
+    //   const base64Image = compressedImage.toString("base64");
+    //   const newClub = new Club({
+    //     name,
+    //     description,
+    //     established_year,
+    //     type,
+    //     logo: base64Image,
+    //   });
+    // }
 
     const newClub = new Club({
       name,

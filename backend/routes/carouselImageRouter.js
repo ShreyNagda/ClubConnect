@@ -7,6 +7,7 @@ import {
   updateCarouselImage,
   deleteCarouselImage,
 } from "../controllers/carouselImageController.js";
+import { checkAdmin } from "../middleware/checkAdmin.js";
 
 // Set up multer for handling file uploads (in memory)
 const upload = multer({
@@ -23,7 +24,7 @@ router.get("/", getAllCarouselImages);
 router.get("/:id", getCarouselImageById);
 
 // POST a new carousel image (with image file upload)
-router.post("/", upload.single("image"), createCarouselImage);
+router.post("/", checkAdmin, upload.single("image"), createCarouselImage);
 
 // PUT update a carousel image by ID (with optional image file upload)
 router.put("/:id", upload.single("image"), updateCarouselImage);

@@ -109,7 +109,6 @@ function AdminCarousel() {
       >
         <div
           onClick={() => {
-            // ev.preventDefault();
             imageRef.current.click();
           }}
           className="border h-32 p-1 px-3 flex flex-col items-center justify-center cursor-pointer"
