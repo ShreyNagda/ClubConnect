@@ -8,6 +8,7 @@ import {
   deleteCarouselImage,
 } from "../controllers/carouselImageController.js";
 import { checkAdmin } from "../middleware/checkAdmin.js";
+import { authMiddleware } from "../middleware/authMiddleware.js";
 
 // Set up multer for handling file uploads (in memory)
 const upload = multer({
@@ -24,12 +25,24 @@ router.get("/", getAllCarouselImages);
 router.get("/:id", getCarouselImageById);
 
 // POST a new carousel image (with image file upload)
-router.post("/", checkAdmin, upload.single("image"), createCarouselImage);
+router.post(
+  "/",
+  authMiddleware,
+  checkAdmin,
+  upload.single("image"),
+  createCarouselImage
+);
 
 // PUT update a carousel image by ID (with optional image file upload)
-router.put("/:id", upload.single("image"), updateCarouselImage);
+router.put(
+  "/:id",
+  authMiddleware,
+  checkAdmin,
+  upload.single("image"),
+  updateCarouselImage
+);
 
 // DELETE a carousel image by ID
-router.delete("/:id", deleteCarouselImage);
+router.delete("/:id", authMiddleware, checkAdmin, deleteCarouselImage);
 
 export default router;

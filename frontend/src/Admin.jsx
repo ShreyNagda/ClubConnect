@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import AdminCarousel from "./Components/AdminCarousel";
+import AdminClubs from "./Components/AdminClubs";
 
 function Admin() {
   const [activeTab, setActiveTab] = useState("carousel");
@@ -15,30 +16,6 @@ function Admin() {
     const isAdmin = window.localStorage.getItem("isAdmin");
     if (!isAdmin) navigate("/");
   }, [window.localStorage.getItem("isAdmin")]);
-
-  const handleEditClick = (image) => {
-    setCurrentImage(image);
-    setEditModalOpen(true);
-  };
-
-  const handleDeleteClick = async (imageId) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this image?"
-    );
-    if (confirmDelete) {
-      await axios.delete(`/api/carousel-images/${imageId}`); // Replace with your API endpoint
-      setCarouselImages(carouselImages.filter((image) => image.id !== imageId));
-    }
-  };
-
-  const handleUpdateImage = async () => {
-    await axios.patch(`/api/carousel-images/${currentImage.id}`, currentImage); // Replace with your API endpoint
-    setEditModalOpen(false);
-    setCurrentImage(null);
-    // Re-fetch images to update state
-    const response = await axios.get("/api/carousel-images");
-    setCarouselImages(response.data);
-  };
 
   return (
     <div className="container mx-auto p-4">
@@ -77,13 +54,7 @@ function Admin() {
 
       {activeTab === "carousel" && <AdminCarousel />}
 
-      {activeTab === "clubs" && (
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Clubs</h2>
-          <p>No clubs available yet.</p>
-          {/* You can replace this with your clubs data */}
-        </div>
-      )}
+      {activeTab === "clubs" && <AdminClubs />}
     </div>
   );
 }

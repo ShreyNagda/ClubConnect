@@ -24,8 +24,6 @@ export const createUser = async (req, res) => {
     });
     res.cookie("token", token, {
       httpOnly: false,
-      secure: false,
-      sameSite: "None",
       maxAge: 24 * 60 * 60 * 1000,
     });
     res.status(201).json({ token, user, isAdmin: user.db_role === "admin" });
@@ -58,8 +56,6 @@ export const loginUser = async (req, res) => {
       // Set token in HTTP-only cookie
       res.cookie("token", token, {
         httpOnly: false,
-        secure: false,
-        sameSite: "None",
         maxAge: 24 * 60 * 60 * 1000,
       });
 

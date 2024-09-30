@@ -18,11 +18,10 @@ function Login() {
         password,
       });
       // Handle success (e.g., save token, redirect, etc.)
-      console.log("Login successful:", response.data);
+      console.log("Login successful:", response);
       toast.success(`Login successfully as ${response.data.user.username}`);
       window.localStorage.setItem("token", response.data.token);
       window.localStorage.setItem("isAdmin", response.data.user.isAdmin);
-      console.log(typeof window.localStorage.getItem("isAdmin"));
       navigate("/");
     } catch (error) {
       // Handle error (e.g., show error message)
