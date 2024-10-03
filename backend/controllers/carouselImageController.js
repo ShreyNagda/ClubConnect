@@ -72,6 +72,8 @@ export const updateCarouselImage = async (req, res) => {
   const { id } = req.params;
   const { text, url } = req.body;
 
+  console.log(id);
+
   try {
     let updatedData = { text, url };
     console.log(updatedData);

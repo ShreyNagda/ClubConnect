@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function Login() {
@@ -13,15 +13,14 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("/api/auth/login", {
+      const response = await axios.post("auth/login", {
         email,
         password,
       });
       // Handle success (e.g., save token, redirect, etc.)
       console.log("Login successful:", response);
       toast.success(`Login successfully as ${response.data.user.username}`);
-      window.localStorage.setItem("token", response.data.token);
-      window.localStorage.setItem("isAdmin", response.data.user.isAdmin);
+      window.localStorage.setItem("role", response.data.user.role);
       navigate("/");
     } catch (error) {
       // Handle error (e.g., show error message)
@@ -32,18 +31,26 @@ function Login() {
     }
   };
 
+  function reset() {
+    setEmail("");
+    setPassword("");
+  }
+
   return (
     <div className="flex items-center justify-center flex-col gap-3 min-h-screen">
-      <div className="p-4 border shadow-md rounded-md flex items-center justify-center flex-col">
+      <div className="p-4 border shadow-md rounded-md flex items-center justify-center flex-col w-4/5 md:w-1/3">
         <h2 className="text-2xl font-bold">Login</h2>
-        <form className="flex flex-col gap-3 mt-5" onSubmit={handleSubmit}>
+        <form
+          className="flex flex-col gap-3 mt-5 w-full"
+          onSubmit={handleSubmit}
+        >
           <input
-            type="email"
+            type="text"
             name="email"
             id="email"
             value={email}
             onChange={(ev) => setEmail(ev.target.value)}
-            placeholder="Enter email"
+            placeholder="Enter email or username"
             className="border px-1 py-1 rounded-sm"
             required
           />
@@ -57,6 +64,12 @@ function Login() {
             className="border px-1 py-1 rounded-sm"
             required
           />
+          <div className="md:text-md text-sm text-right">
+            Don't have an account?{" "}
+            <Link to={"/signup"} className="text-blue-400">
+              Signup
+            </Link>
+          </div>
           <input
             type="submit"
             value="Login"

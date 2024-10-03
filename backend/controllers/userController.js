@@ -7,16 +7,19 @@ import jwt from "jsonwebtoken";
 // Create a new user
 export const createUser = async (req, res) => {
   try {
-    const { name, username, email, password, client_role, db_role } = req.body;
+    const { name, username, email, phone, password, client_role, db_role } =
+      req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log(req.body);
 
     const newUser = new User({
       name,
       username,
       email,
+      phone,
       password: hashedPassword,
-      client_role,
-      db_role,
+      client_role: client_role || "student",
+      db_role: db_role || "user",
     });
     const user = await newUser.save();
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
@@ -24,9 +27,9 @@ export const createUser = async (req, res) => {
     });
     res.cookie("token", token, {
       httpOnly: false,
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 1 * 60 * 60 * 1000,
     });
-    res.status(201).json({ token, user, isAdmin: user.db_role === "admin" });
+    res.status(201).json({ token, user, role: user.db_role });
   } catch (err) {
     res
       .status(500)
@@ -38,7 +41,9 @@ export const createUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const user =
+      (await User.findOne({ email })) ||
+      (await User.findOne({ username: email }));
 
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
@@ -56,7 +61,7 @@ export const loginUser = async (req, res) => {
       // Set token in HTTP-only cookie
       res.cookie("token", token, {
         httpOnly: false,
-        maxAge: 24 * 60 * 60 * 1000,
+        maxAge: 1 * 60 * 60 * 1000,
       });
 
       res.json({
@@ -65,7 +70,7 @@ export const loginUser = async (req, res) => {
         user: {
           id: user._id,
           username: user.username,
-          isAdmin: user.db_role === "admin",
+          role: user.db_role,
         },
       });
     });
@@ -77,7 +82,11 @@ export const loginUser = async (req, res) => {
 // Get a user by ID
 export const getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id)
+    const token = req.params.token;
+    const decoded = jwt.decode(token);
+    console.log(decoded.id);
+    const id = decoded.id;
+    const user = await User.findById(id)
       .populate("clubs", "name")
       .populate("events_attended", "name");
     if (!user) {
@@ -91,8 +100,24 @@ export const getUserById = async (req, res) => {
   }
 };
 
+export const getAllUsers = async (req, res) => {
+  try {
+    let users;
+    if (req.body) {
+      users = await User.find(req.query);
+    } else {
+      users = await User.find({ db_role: "user" || "club_admin" });
+    }
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(501).json({ message: err.message });
+  }
+};
+
 // Update a user by ID
 export const updateUser = async (req, res) => {
+  let file = req.file;
+  console.log(file);
   try {
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -174,7 +199,8 @@ export const attendEvent = async (req, res) => {
 export const joinClub = async (req, res) => {
   try {
     const { clubId } = req.body;
-    const user = await User.findById(req.params.id);
+    const decoded = jwt.decode(req.params.token);
+    const user = await User.findById(decoded.id);
     const club = await Club.findById(clubId);
 
     if (!user || !club) {
@@ -184,10 +210,12 @@ export const joinClub = async (req, res) => {
     if (!user.clubs.includes(clubId)) {
       user.clubs.push(clubId);
       await user.save();
+      res.json({ message: "Joined club successfully", user });
+    } else {
+      res.json({ message: "Already joined club" });
     }
-
-    res.json({ message: "Joined club successfully", user });
   } catch (err) {
+    console.log(err.message);
     res.status(500).json({ message: "Error joining club", error: err.message });
   }
 };

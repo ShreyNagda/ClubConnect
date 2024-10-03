@@ -13,49 +13,57 @@ function Admin() {
 
   const navigate = useNavigate();
   useEffect(() => {
-    const isAdmin = window.localStorage.getItem("isAdmin");
-    if (!isAdmin) navigate("/");
-  }, [window.localStorage.getItem("isAdmin")]);
+    if (!document.cookie.includes("token")) {
+      navigate("/notloggedin");
+    }
+    const role = window.localStorage.getItem("role");
+    if (role !== "admin") navigate("/notanadmin");
+  }, [window.localStorage.getItem("role")]);
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex justify-around mb-4">
-        <button
-          className={`py-2 px-4 ${
-            activeTab === "carousel"
-              ? "border-blue-400 border-2 rounded-sm"
-              : "bg-transparent"
-          }`}
-          onClick={() => setActiveTab("carousel")}
-        >
-          Carousel Images
-        </button>
-        <button
-          className={`py-2 px-4 ${
-            activeTab === "clubs"
-              ? "border-blue-400 border-2 rounded-sm"
-              : "bg-transparent"
-          }`}
-          onClick={() => setActiveTab("clubs")}
-        >
-          Clubs
-        </button>
-        <button
-          className={`py-2 px-4 ${
-            activeTab === "users"
-              ? "border-blue-400 border-2 rounded-sm"
-              : "bg-transparent"
-          }`}
-          onClick={() => setActiveTab("users")}
-        >
-          Users
-        </button>
+    <>
+      <div className="md:hidden flex min-h-screen items-center justify-center">
+        Please access on a Computer
       </div>
+      <div className="container mx-auto p-4 hidden md:block">
+        <div className="flex justify-around mb-4">
+          <button
+            className={`py-2 px-4 ${
+              activeTab === "carousel"
+                ? "border-blue-400 border-2 rounded-sm"
+                : "bg-transparent"
+            }`}
+            onClick={() => setActiveTab("carousel")}
+          >
+            Carousel Images
+          </button>
+          <button
+            className={`py-2 px-4 ${
+              activeTab === "clubs"
+                ? "border-blue-400 border-2 rounded-sm"
+                : "bg-transparent"
+            }`}
+            onClick={() => setActiveTab("clubs")}
+          >
+            Clubs
+          </button>
+          <button
+            className={`py-2 px-4 ${
+              activeTab === "users"
+                ? "border-blue-400 border-2 rounded-sm"
+                : "bg-transparent"
+            }`}
+            onClick={() => setActiveTab("users")}
+          >
+            Users
+          </button>
+        </div>
 
-      {activeTab === "carousel" && <AdminCarousel />}
+        {activeTab === "carousel" && <AdminCarousel />}
 
-      {activeTab === "clubs" && <AdminClubs />}
-    </div>
+        {activeTab === "clubs" && <AdminClubs />}
+      </div>
+    </>
   );
 }
 

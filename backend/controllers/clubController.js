@@ -1,34 +1,42 @@
 import sharp from "sharp";
 import Club from "../models/club.js";
+import multer from "multer";
+
+// Multer setup for file handling
+const storage = multer.memoryStorage(); // Store files in memory as buffer
+export const upload = multer({ storage });
 
 // Create a new club
 export const createClub = async (req, res) => {
   try {
     console.log(req.body);
-    const { name, description, established_year, type } = req.body;
-    // if (req.file) {
-    //   console.log(req.file);
-    //   const imageBuffer = req.file.buffer;
-    //   const compressedImage = await sharp(imageBuffer)
-    //     .resize(800) // Resize to 800px width (change as needed)
-    //     .jpeg({ quality: 70 }) // Compress to 70% quality (adjustable)
-    //     .toBuffer();
+    const {
+      name,
+      description,
+      established_year,
+      type = "club",
+      faculty_incharge,
+    } = req.body;
+    let file = req.file; // Retrieve the uploaded file from multer
 
-    //   const base64Image = compressedImage.toString("base64");
-    //   const newClub = new Club({
-    //     name,
-    //     description,
-    //     established_year,
-    //     type,
-    //     logo: base64Image,
-    //   });
-    // }
+    let base64Image;
+    if (file) {
+      const imageBuffer = file.buffer;
+      const compressedImage = await sharp(imageBuffer)
+        .resize(800) // Resize to 800px width (change as needed)
+        .jpeg({ quality: 70 }) // Compress to 70% quality (adjustable)
+        .toBuffer();
+
+      base64Image = compressedImage.toString("base64"); // Convert to base64 string
+    }
 
     const newClub = new Club({
       name,
       description,
       established_year,
       type,
+      faculty_incharge,
+      logo: base64Image ? `data:image/jpeg;base64,${base64Image}` : undefined, // Save as base64
     });
 
     const savedClub = await newClub.save();
@@ -43,7 +51,10 @@ export const createClub = async (req, res) => {
 // Get all clubs
 export const getAllClubs = async (req, res) => {
   try {
-    const clubs = await Club.find()
+    if (req.query) {
+      console.log(req.query);
+    }
+    const clubs = await Club.find(req.query)
       .populate("faculty_incharge")
       .populate("events_conducted");
     res.json(clubs);

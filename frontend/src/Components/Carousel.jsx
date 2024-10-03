@@ -1,35 +1,56 @@
 import { useQuery } from "react-query";
 import axios from "axios";
-import banner from "../assets/banner.jpg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function Carousel() {
   const fetchData = async () => {
-    return axios.get("/api/carousel/").then((res) => res.data);
+    return axios.get("carousel/").then((res) => res.data);
   };
+
+  const autoSlideInterval = 3000; // Automatic slide interval set to 3 seconds
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  // Fetch the images data
   const { data: images, error, isLoading } = useQuery("imagesData", fetchData);
 
-  if (isLoading) return <div className=""> Loading</div>;
-  if (error) return <div className="">Error</div>;
-  // if (images.length <= 0)
-  //   return <img src={banner} alt="Banner Image" className="object-fill" />;
+  // Ensure the effect for auto sliding runs only when images are available
+  useEffect(() => {
+    let timer;
+    if (!isPaused && images?.length) {
+      timer = setTimeout(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+      }, autoSlideInterval);
+    }
+    return () => clearTimeout(timer); // Clean up the timer on unmount
+  }, [currentIndex, isPaused, images, autoSlideInterval]);
 
-  const prevSlide = () => {
-    const isFirstSlide = currentIndex === 0;
-    const newIndex = isFirstSlide ? images.length - 1 : currentIndex - 1;
-    setCurrentIndex(newIndex);
+  // Function to go to the next slide
+  const goToNextSlide = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    resetTimer();
   };
 
-  const nextSlide = () => {
-    const isLastSlide = currentIndex === images.length - 1;
-    const newIndex = isLastSlide ? 0 : currentIndex + 1;
-    setCurrentIndex(newIndex);
+  // Function to go to the previous slide
+  const goToPreviousSlide = () => {
+    setCurrentIndex(
+      (prevIndex) => (prevIndex - 1 + images.length) % images.length
+    );
+    resetTimer();
   };
+
+  // Reset the timer on user interaction
+  const resetTimer = () => {
+    setIsPaused(true); // Pause the auto-slide temporarily
+    setTimeout(() => setIsPaused(false), 1000); // Resume auto-slide after 1 second
+  };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading carousel data!</div>;
 
   return (
-    <div className="relative top-[0px] w-full max-w-4xl mx-auto overflow-hidden py-2">
+    <div className="relative top-[0px] w-full max-w-4xl mx-auto overflow-hidden md:py-2">
       {/* Carousel Wrapper */}
       <div
         className="flex transition-transform duration-500 ease-in-out"
@@ -38,18 +59,18 @@ function Carousel() {
         {images.map((image, index) => (
           <div
             className={
-              "min-w-full relative" + `${image.url && "cursor-pointer"}`
+              "min-w-full relative " + `${image.url && "cursor-pointer"}`
             }
             key={index}
             onClick={() => {
-              image.url === null || image.url === ""
-                ? null
-                : console.log("Hello");
+              if (image.url) {
+                window.open(image.url, "_blank");
+              }
             }}
           >
             <img
               src={image.image}
-              className="w-full object-cover h-64 md:h-96 overflow-hidden"
+              className="w-full object-cover h-60 md:h-96 overflow-hidden lg:rounded-md"
               alt={image.text}
             />
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
@@ -65,7 +86,7 @@ function Carousel() {
 
       {/* Left Arrow */}
       <button
-        onClick={prevSlide}
+        onClick={goToPreviousSlide}
         className="absolute top-1/2 transform -translate-y-1/2 left-4 text-white bg-black bg-opacity-50 rounded-full py-2 px-4"
       >
         &#10094;
@@ -73,7 +94,7 @@ function Carousel() {
 
       {/* Right Arrow */}
       <button
-        onClick={nextSlide}
+        onClick={goToNextSlide}
         className="absolute top-1/2 transform -translate-y-1/2 right-4 text-white bg-black bg-opacity-50 rounded-full py-2 px-4"
       >
         &#10095;

@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
 
 import Carousel from "./Components/Carousel";
-import About from "./Components/About";
+import AboutSection from "./Components/AboutSection";
+import HomeButtonContainer from "./Common/HomeButtonContainer";
+import ClubSection from "./Components/ClubSection";
+import SocietySection from "./Components/SocietySection";
 
 function Home() {
-  const [imageData, setImageData] = useState(null);
-
   return (
     <>
       <Carousel />
-      <About />
+      <AboutSection />
+      {/* <HomeButtonContainer /> */}
+      <ClubSection />
+      <SocietySection />
     </>
   );
 }

@@ -8,6 +8,7 @@ import {
   attendEvent,
   joinClub,
   loginUser,
+  getAllUsers,
 } from "../controllers/userController.js";
 
 import {
@@ -17,12 +18,19 @@ import {
 } from "../controllers/eventController.js";
 
 import { authMiddleware } from "../middleware/authMiddleware.js";
+import multer from "multer";
 
 const router = Router();
 
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 50 * 1024 * 1024 },
+});
+
 // CRUD Routes
-router.get("/:id", authMiddleware, getUserById);
-router.put("/:id", authMiddleware, updateUser);
+router.get("/:token", authMiddleware, getUserById);
+router.get("/", authMiddleware, getAllUsers);
+router.put("/:id", authMiddleware, upload.single("image"), updateUser);
 router.delete("/:id", authMiddleware, deleteUser);
 
 // Password change
@@ -45,6 +53,6 @@ router.get(
 );
 
 // Club joining
-router.post("/:id/join-club", authMiddleware, joinClub);
+router.post("/:token/join-club", authMiddleware, joinClub);
 
 export default router;

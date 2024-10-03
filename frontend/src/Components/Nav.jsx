@@ -4,8 +4,21 @@ import { IoClose } from "react-icons/io5";
 import { useEffect, useState } from "react";
 
 function CheckAdminAndLink() {
-  return (window.localStorage.getItem("isAdmin") !== null) &
-    (window.localStorage.getItem("isAdmin") === "true") ? (
+  if (window.localStorage.getItem("role")) {
+    if (window.localStorage.getItem("role") === "admin") {
+      return (
+        <NavLink
+          to="/admin"
+          className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
+        >
+          Admin
+        </NavLink>
+      );
+    }
+    // }else if(window.localStorage.getItem("role") === "")
+  }
+  return (window.localStorage.getItem("role") !== null) &
+    (window.localStorage.getItem("role") === "admin") ? (
     <NavLink
       to="/admin"
       className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
@@ -53,7 +66,7 @@ function UserNavLinks() {
       <NavLink to="/societies" className="aria-[current=page]:text-blue-400">
         Societies
       </NavLink>
-      {window.localStorage.getItem("token") !== null ? (
+      {window.localStorage.getItem("role") !== null ? (
         <CheckAdminAndLink />
       ) : (
         <NavLink
@@ -72,7 +85,9 @@ export default function Nav() {
   const location = useLocation();
 
   const isAdminPage =
-    location.pathname === "/admin" || location.pathname === "/logout";
+    location.pathname === "/admin" ||
+    location.pathname === "/logout" ||
+    location.pathname === "/club/add";
 
   const toggleNavBar = () => setIsOpen(!isOpen);
   useEffect(() => {

@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
   username: { type: String, unique: true },
   email: { type: String, unique: true },
   password: String,
+  phone: { type: String, unique: true },
   client_role: {
     type: String,
     enum: ["student", "faculty", "hod"],
@@ -20,6 +21,7 @@ const userSchema = new mongoose.Schema({
     enum: ["user", "club_admin", "admin"],
     default: "user",
   }, // Default set to 'user'
+  profile: { type: String },
   clubs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Club" }],
   events_attended: [{ type: mongoose.Schema.Types.ObjectId, ref: "Event" }],
   rewards: [rewardSchema],

@@ -11,26 +11,44 @@ import { checkAdmin } from "../middleware/checkAdmin.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 import multer from "multer";
 
-const router = express.Router();
-
+// Multer configuration for handling image uploads
 const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 50 * 1024 * 1024 },
+  storage: multer.memoryStorage(), // Store images in memory as buffer
+  limits: { fileSize: 50 * 1024 * 1024 }, // Max file size limit (50MB)
 });
 
-// Create a new club - accessible only by authorized users
-router.post("/", authMiddleware, checkAdmin, createClub);
+const router = express.Router();
 
-// Get all clubs (public)
+// Create a new club - only admins can create a club
+router.post(
+  "/",
+  authMiddleware, // User must be logged in
+  checkAdmin, // User must be an admin
+  upload.single("image"), // Handling image upload (for the club logo)
+  createClub // Controller function to create a club
+);
+
+// Get all clubs (public route)
 router.get("/", getAllClubs);
 
-// Get a single club by ID (public)
+// Get a specific club by its ID (public route)
 router.get("/:clubId", getClubById);
 
-// Update a club - accessible only by authorized users
-router.put("/:clubId", authMiddleware, checkClubAdminOrFaculty, updateClub);
+// Update a club - only club admin or faculty in charge can update
+router.put(
+  "/:clubId",
+  authMiddleware, // User must be logged in
+  checkClubAdminOrFaculty, // Only club admin or faculty in charge can update
+  upload.single("image"), // Handling image upload (for updating club logo)
+  updateClub // Controller function to update a club
+);
 
-// Delete a club - accessible only by authorized users
-router.delete("/:clubId", authMiddleware, checkClubAdminOrFaculty, deleteClub);
+// Delete a club - only club admin or faculty in charge can delete
+router.delete(
+  "/:clubId",
+  authMiddleware, // User must be logged in
+  checkClubAdminOrFaculty, // Only club admin or faculty in charge can delete
+  deleteClub // Controller function to delete a club
+);
 
 export default router;

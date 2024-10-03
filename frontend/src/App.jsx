@@ -9,9 +9,20 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Logout from "./Logout";
 import Admin from "./Admin";
+import Profile from "./Profile";
+import AddClub from "./Components/AddClub";
+import NotAnAdmin from "./Components/NotAnAdmin";
+import NotLoggedIn from "./Components/NotLoggedIn";
+import Club from "../../backend/models/club";
+import Clubs from "./Clubs";
+import Society from "./Society";
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 axios.defaults.withCredentials = true;
+
+if (!document.cookie.includes("token")) {
+  window.localStorage.removeItem("role");
+}
 
 function App() {
   return (
@@ -38,6 +49,12 @@ function App() {
             <Route path="/logout" Component={Logout} />
             <Route path="/signup" Component={Signup} />
             <Route path="/admin" Component={Admin} />
+            <Route path="/club/add" Component={AddClub} />
+            <Route path="/profile" Component={Profile} />
+            <Route path="/clubs" Component={Clubs} />
+            <Route path="/societies" Component={Society} />
+            <Route path="/notanadmin" Component={NotAnAdmin} />
+            <Route path="/notloggedin" Component={NotLoggedIn} />
           </Routes>
         </div>
         <Footer />

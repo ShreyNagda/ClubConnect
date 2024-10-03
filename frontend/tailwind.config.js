@@ -10,6 +10,9 @@ export default {
         lato: ["Lato", "sans-serif"],
         roboto: ["Roboto", "sans-serif"],
       },
+      width: {
+        clamp: "min(100vw, 896px)",
+      },
     },
   },
   plugins: [],

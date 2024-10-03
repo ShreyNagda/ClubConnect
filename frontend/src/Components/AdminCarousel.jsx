@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
+import Modal from "../Common/Modal"; // Import your reusable Modal component
 
 function AdminCarousel() {
   const [text, setText] = useState("");
@@ -10,6 +12,9 @@ function AdminCarousel() {
   const [previewImage, setPreviewImage] = useState(null);
 
   const [currentImage, setCurrentImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null); // Track the selected image for deletion
+  const [isModalOpen, setIsModalOpen] = useState(false); // Track modal state
+
   const formRef = useRef(null);
   const imageRef = useRef(null);
 
@@ -22,7 +27,7 @@ function AdminCarousel() {
   }, [previewImage]);
 
   const fetchData = async () => {
-    return axios.get("/api/carousel/").then((res) => res.data);
+    return axios.get("carousel/").then((res) => res.data);
   };
 
   const {
@@ -53,41 +58,48 @@ function AdminCarousel() {
       }
 
       if (currentImage === null) {
-        // console.log()
-        const res = await axios.post("api/carousel", data);
+        const res = await axios.post("carousel", data);
         toast.success("Image added successfully!");
       } else {
-        const res = await axios.put(`api/carousel/${currentImage.id}`, data);
-        console.log(res.data);
+        const res = await axios.put(`carousel/${currentImage.id}`, data);
+        toast.success("Image updated successfully!");
       }
       refetch();
       reset();
       setCurrentImage(null);
     } catch (err) {
       console.log(err);
+      toast.error("Failed to add/update image.");
     }
   };
 
   const handleEditClick = (image) => {
-    console.log(image);
     setCurrentImage(image);
     setText(image.text);
     setFile(image.image);
     setPreviewImage(image.image);
   };
-  const handleDeleteClick = async (id) => {
-    console.log(id);
-    if (confirm("Are you sure to delete this image?")) {
-      try {
-        const res = await axios.delete(`/api/carousel/${id}`);
-        console.log(res);
-        toast.success("Image deleted successfully!");
-        refetch();
-      } catch (err) {
-        console.log(err);
-        toast.error(err.message);
-      }
+
+  const handleDeleteClick = (image) => {
+    setSelectedImage(image); // Set the image selected for deletion
+    setIsModalOpen(true); // Open the confirmation modal
+  };
+
+  const confirmDelete = async () => {
+    try {
+      await axios.delete(`carousel/${selectedImage.id}`);
+      toast.success("Image deleted successfully!");
+      setIsModalOpen(false);
+      refetch();
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to delete image.");
     }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedImage(null);
   };
 
   const reset = () => {
@@ -150,8 +162,9 @@ function AdminCarousel() {
           />
         </div>
       </form>
+
       {isLoading && <div>Loading</div>}
-      {error && <div>{error}</div>}
+      {error && <div>{error.message}</div>}
       {images && (
         <table className="min-w-full bg-white border border-gray-300">
           <thead>
@@ -182,13 +195,13 @@ function AdminCarousel() {
                       className="text-blue-500 mr-2"
                       onClick={() => handleEditClick(image)}
                     >
-                      Edit
+                      <AiFillEdit size={20} />
                     </button>
                     <button
                       className="text-red-500"
-                      onClick={() => handleDeleteClick(image.id)}
+                      onClick={() => handleDeleteClick(image)}
                     >
-                      Delete
+                      <AiFillDelete size={20} />
                     </button>
                   </td>
                 </tr>
@@ -196,7 +209,19 @@ function AdminCarousel() {
           </tbody>
         </table>
       )}
+
+      {/* Modal for Delete Confirmation */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        title="Delete Confirmation"
+        message={`Are you sure you want to delete this image?`}
+        onConfirm={confirmDelete}
+        confirmText="Delete"
+        cancelText="Cancel"
+      />
     </>
   );
 }
+
 export default AdminCarousel;
