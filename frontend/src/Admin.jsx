@@ -45,7 +45,7 @@ function Admin() {
             }`}
             onClick={() => setActiveTab("clubs")}
           >
-            Clubs
+            Clubs / Societies
           </button>
           <button
             className={`py-2 px-4 ${

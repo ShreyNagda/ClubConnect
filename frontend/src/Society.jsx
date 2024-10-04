@@ -50,7 +50,7 @@ function Society() {
 
   return (
     <div className="p-2">
-      <div className="text-2xl font-semibold">Societies</div>
+      <div className="text-2xl font-semibold my-2">Societies</div>
       <div className="grid grid-cols-2 md:grid-cols-3">
         {clubs && clubs.length <= 0 && <div>No Societies</div>}
         {clubs &&
@@ -59,7 +59,7 @@ function Society() {
           clubs.length >= 0 &&
           clubs.map((club) => (
             <div
-              className="flex flex-col p-4 cursor-pointer border items-start"
+              className="flex flex-col p-4 cursor-pointer border rounded-sm shadow-lg items-start"
               key={club._id}
             >
               <img

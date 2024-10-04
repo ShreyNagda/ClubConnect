@@ -17,7 +17,7 @@ function Clubs() {
 
   const fetchData = async () => {
     const res = await axios.get("/clubs?type=club");
-    // console(res);
+    console.log(res);
     return res.data;
   };
 
@@ -52,7 +52,7 @@ function Clubs() {
 
   return (
     <div className="p-2">
-      <div className="text-2xl font-semibold">Clubs</div>
+      <div className="text-2xl font-semibold my-2">Clubs</div>
       <div className="grid grid-cols-2 md:grid-cols-3">
         {clubs &&
           clubs.length >= 0 &&
@@ -60,7 +60,7 @@ function Clubs() {
           clubs.length >= 0 &&
           clubs.map((club) => (
             <div
-              className="flex flex-col p-4 cursor-pointer border items-start"
+              className="flex flex-col p-4 cursor-pointer border items-start rounded-sm shadow-lg"
               key={club._id}
             >
               <img
