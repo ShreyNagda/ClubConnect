@@ -22,6 +22,7 @@ function Clubs() {
   };
 
   const viewClub = (club) => {
+    navigate(`/clubs/${club._id}`, { state: { club } });
     console.log(club);
   };
   const joinClub = async (club) => {
