@@ -1,96 +1,61 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 function Society() {
-  const navigate = useNavigate();
-
-  const fetchUser = async () => {
-    if (document.cookie.includes("token")) {
-      const token = document.cookie.split("=")[1];
-      const res = await axios.get(`/users/${token}`);
-      console.log(res);
-    }
-  };
-
-  const fetchData = async () => {
-    const res = await axios.get("/clubs?type=society");
-    // console(res);
+  // const [club, setClub] = useState(null);
+  const fetchClub = async () => {
+    console.log(window.location.pathname);
+    const res = await axios.get(
+      `/clubs/${window.location.pathname.split("/")[2]}`
+    );
     return res.data;
   };
 
-  const viewClub = (club) => {
-    console.log(club);
-  };
-  const joinClub = async (club) => {
-    if (!document.cookie.includes("token")) {
-      navigate("/notloggedin");
-    }
-    try {
-      const token = document.cookie.split("=")[1];
-      const res = await axios.post(`/users/${token}/join-club`, {
-        clubId: club._id,
-      });
-      toast.success(res.data["message"]);
-      console.log(res);
-    } catch (err) {}
-  };
-  const { data: clubs, error, loading } = useQuery("societies", fetchData);
-  const { data: user, errorUser, loadingUser } = useQuery("user", fetchData);
+  useEffect(() => {
+    fetchClub();
+  }, []);
 
-  if (error) return <div>{error}</div>;
-  if (loading)
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading..
-      </div>
-    );
+  const { data: club, error, loading } = useQuery("club", fetchClub);
 
+  if (error) return <div>Error</div>;
+  if (loading) return <div>Loading</div>;
   return (
-    <div className="p-2">
-      <div className="text-2xl font-semibold my-2">Societies</div>
-      <div className="grid grid-cols-2 md:grid-cols-3">
-        {clubs && clubs.length <= 0 && <div>No Societies</div>}
-        {clubs &&
-          clubs.length >= 0 &&
-          clubs &&
-          clubs.length >= 0 &&
-          clubs.map((club) => (
-            <div
-              className="flex flex-col p-4 cursor-pointer border rounded-sm shadow-lg items-start"
-              key={club._id}
-            >
-              <img
-                src={club.logo}
-                alt=""
-                className="rounded-lg h-32 w-32 md:w-44 md:h-44"
-              />
-              <div className="text-xl font-bold">{club["name"]}</div>
-              <div>{club["established_year"]}</div>
-              <div className="flex w-full gap-2">
-                <button
-                  type="button"
-                  className="bg-blue-400 w-full p-2 text-center"
-                  onClick={() => viewClub(club)}
-                >
-                  View
-                </button>
-                {window.localStorage.getItem("role") === "user" && (
-                  <button
-                    type="button"
-                    className="bg-blue-400 w-full p-2 text-center"
-                    onClick={() => joinClub(club)}
-                  >
-                    Join
-                  </button>
-                )}
+    <div className="flex items-center">
+      {!club && (
+        <div className="flex flex-col gap-2">
+          <div>No Club found</div>
+          <Link className="bg-blue-400 px-4 py-2">Go Back</Link>
+        </div>
+      )}
+      {club && (
+        <div className="flex flex-col p-4">
+          <img
+            src={club.logo}
+            alt={club.name}
+            className="w-32 h-32 md:w-96 md:h-96 object-cover"
+          />
+          <h1 className="text-2xl font-bold mt-2">{club.name}</h1>
+          <div className="font-bold text-lg">Since {club.established_year}</div>
+          <p className="mt-1">{club.description}</p>
+          <p>{club.tags.join(", ")}</p>
+          <div className="flex gap-1">
+            {club.faculty_incharge.map((faculty) => (
+              <div
+                key={faculty._id}
+                className="bg-slate-400 py-1 px-2 rounded-sm"
+              >
+                {faculty.name}
               </div>
-            </div>
-          ))}
-      </div>
+            ))}
+          </div>
+          <p>Events Conducted: {club.events_conducted.length} events</p>
+          <p>Past Core Teams: {club.past_core_teams.length} teams</p>
+        </div>
+      )}
     </div>
   );
 }
+
 export default Society;

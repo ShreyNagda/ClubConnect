@@ -16,6 +16,7 @@ import NotLoggedIn from "./Components/NotLoggedIn";
 import Clubs from "./Clubs";
 import Society from "./Society";
 import Club from "./Club";
+import Societies from "./Societies";
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 axios.defaults.withCredentials = true;
@@ -53,7 +54,8 @@ function App() {
             <Route path="/profile" Component={Profile} />
             <Route path="/clubs" Component={Clubs} />
             <Route path="/clubs/:id" Component={Club} />
-            <Route path="/societies" Component={Society} />
+            <Route path="/societies/:id" Component={Society} />
+            <Route path="/societies" Component={Societies} />
             <Route path="/notanadmin" Component={NotAnAdmin} />
             <Route path="/notloggedin" Component={NotLoggedIn} />
           </Routes>

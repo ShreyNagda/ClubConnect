@@ -72,6 +72,7 @@ export const getClubById = async (req, res) => {
     const club = await Club.findById(clubId)
       .populate("faculty_incharge")
       .populate("events_conducted");
+    console.log(club);
     if (!club) {
       return res.status(404).json({ message: "Club not found" });
     }
