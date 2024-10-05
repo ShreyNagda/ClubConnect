@@ -17,7 +17,7 @@ function Society() {
     fetchClub();
   }, []);
 
-  const { data: club, error, loading } = useQuery("club", fetchClub);
+  const { data: club, error, loading } = useQuery("society", fetchClub);
 
   if (error) return <div>Error</div>;
   if (loading) return <div>Loading</div>;
