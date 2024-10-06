@@ -18,7 +18,7 @@ await mongoose.connect(process.env.MONGO_URI).then(() => {
   console.log("Database Connected!");
 });
 
-app.length("/", (req, res) => {
+app.get("/", (req, res) => {
   res.json("Server Running");
 });
 
