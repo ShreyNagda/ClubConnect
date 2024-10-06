@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
     enum: ["user", "club_admin", "admin"],
     default: "user",
   }, // Default set to 'user'
-  profile: { type: String },
+  profile_pic: { type: String },
   clubs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Club" }],
   events_attended: [{ type: mongoose.Schema.Types.ObjectId, ref: "Event" }],
   rewards: [rewardSchema],

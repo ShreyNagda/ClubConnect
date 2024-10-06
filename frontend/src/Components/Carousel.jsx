@@ -1,6 +1,7 @@
 import { useQuery } from "react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Fun from "../assets/fun.jpg";
 
 function Carousel() {
   const fetchData = async () => {
@@ -46,7 +47,12 @@ function Carousel() {
     setTimeout(() => setIsPaused(false), 1000); // Resume auto-slide after 1 second
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div>
+        <img src={Fun} alt="" />
+      </div>
+    );
   if (error) return <div>Error loading carousel data!</div>;
 
   return (
