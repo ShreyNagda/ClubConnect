@@ -18,6 +18,10 @@ await mongoose.connect(process.env.MONGO_URI).then(() => {
   console.log("Database Connected!");
 });
 
+app.length("/", (req, res) => {
+  res.json("Server Running");
+});
+
 app.use(
   cors({
     origin: "http://localhost:5173", // Replace with your frontend URL
