@@ -10,13 +10,8 @@ export const upload = multer({ storage });
 export const createClub = async (req, res) => {
   try {
     console.log(req.body);
-    const {
-      name,
-      description,
-      established_year,
-      type = "club",
-      faculty_incharge,
-    } = req.body;
+    const { name, description, established_year, type, faculty_incharge } =
+      req.body;
     let file = req.file; // Retrieve the uploaded file from multer
 
     let base64Image;
@@ -34,7 +29,7 @@ export const createClub = async (req, res) => {
       name,
       description,
       established_year,
-      type,
+      type: type || "club",
       faculty_incharge,
       logo: base64Image ? `data:image/jpeg;base64,${base64Image}` : undefined, // Save as base64
     });
@@ -88,11 +83,31 @@ export const getClubById = async (req, res) => {
 export const updateClub = async (req, res) => {
   try {
     const { clubId } = req.params;
-    const { name, description, established_year, type } = req.body;
+    const { name, description, established_year, type, faculty_incharge } =
+      req.body;
+    let file = req.file; // Retrieve the uploaded file from multer
+
+    let base64Image;
+    if (file) {
+      const imageBuffer = file.buffer;
+      const compressedImage = await sharp(imageBuffer)
+        .resize(800) // Resize to 800px width (change as needed)
+        .jpeg({ quality: 70 }) // Compress to 70% quality (adjustable)
+        .toBuffer();
+
+      base64Image = compressedImage.toString("base64"); // Convert to base64 string
+    }
 
     const updatedClub = await Club.findByIdAndUpdate(
       clubId,
-      { name, description, established_year, type },
+      {
+        name,
+        description,
+        established_year,
+        type,
+        faculty_incharge,
+        logo: base64Image,
+      },
       { new: true }
     );
 

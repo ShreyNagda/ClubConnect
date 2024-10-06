@@ -1,25 +1,31 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import SearchableDropdown from "../Common/SearchableDropdown";
 import NotLoggedIn from "./NotLoggedIn";
 import axios from "axios";
 import { toast } from "react-toastify";
 import ToggleButton from "../Common/ToggleButton";
 
-function AddClub({ clubData }) {
+function EditClub() {
+  const location = useLocation();
+  const clubData = location.state;
   const filePickerRef = useRef(null);
 
-  const [totalCount, setTotalCount] = useState(0);
-  const [file, setFile] = useState(null);
-  const [previewFile, setPreviewFile] = useState(null);
-  const [facultyIncharge, setFacultyIncharge] = useState(null);
+  const [totalCount, setTotalCount] = useState(
+    clubData["description"].length || 0
+  );
+  const [file, setFile] = useState(clubData["logo"] || null);
+  const [previewFile, setPreviewFile] = useState(clubData["logo"] || null);
+  const [facultyIncharge, setFacultyIncharge] = useState(
+    clubData["faculty_incharge"] || []
+  );
 
   const navigate = useNavigate();
 
-  const [clubName, setClubName] = useState("");
-  const [desc, setDesc] = useState("");
-  const [type, setType] = useState("");
-  const [year, setYear] = useState(0);
+  const [clubName, setClubName] = useState(clubData["name"]);
+  const [desc, setDesc] = useState(clubData["description"]);
+  const [type, setType] = useState(clubData["type"]);
+  const [year, setYear] = useState(clubData["established_year"]);
 
   function handleFileClick(ev) {
     filePickerRef.current.click();
@@ -47,6 +53,7 @@ function AddClub({ clubData }) {
     const facultyData = facultyIncharge.map((user) => user._id);
     console.log(facultyData);
     try {
+      console.log(facultyIncharge);
       const formData = new FormData();
       formData.append("name", clubName);
       formData.append("description", desc);
@@ -54,7 +61,7 @@ function AddClub({ clubData }) {
       formData.append("image", file);
       formData.append("faculty_incharge", facultyData);
       formData.append("type", type);
-      const res = await axios.post("/clubs/", formData);
+      const res = await axios.put(`/clubs/${clubData["_id"]}`, formData);
       toast.success("Club added successfully!");
       navigate(-1);
     } catch (err) {
@@ -76,7 +83,7 @@ function AddClub({ clubData }) {
           className="flex flex-col items-center shadow-lg gap-2 p-4 md:w-4/5"
           onSubmit={handleSubmit}
         >
-          <h2 className="text-left w-full text-2xl font-bold">Add new Club</h2>
+          <h2 className="text-left w-full text-2xl font-bold">Edit Club</h2>
           <input
             type="text"
             className="border px-1 py-1 rounded-sm w-full"
@@ -108,6 +115,7 @@ function AddClub({ clubData }) {
             placeholder="Enter Established Year"
             className="border px-1 py-3 rounded-sm w-full"
             onChange={(ev) => setYear(Number(ev.target.value))}
+            value={year}
             min={1999}
           />
           <div
@@ -138,12 +146,15 @@ function AddClub({ clubData }) {
           </div>
           <div className="w-full flex items-center rounded-sm">
             <div className="text-slate-400 mr-2">Select Faculty Incharge</div>
-            <SearchableDropdown handleFacultyIncharge={handleFacultyIncharge} />
+            <SearchableDropdown
+              handleFacultyIncharge={handleFacultyIncharge}
+              value={clubData["faculty_incharge"]}
+            />
           </div>
           <ToggleButton onToggle={(value) => setType(value.toLowerCase())} />
           <input
             type="submit"
-            value={"Add Club"}
+            value={"Edit Club"}
             className="bg-blue-400 w-1/2 p-3 self-start rounded-sm"
           />
         </form>
@@ -152,4 +163,4 @@ function AddClub({ clubData }) {
   );
 }
 
-export default AddClub;
+export default EditClub;

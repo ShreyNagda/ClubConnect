@@ -47,7 +47,7 @@ function Admin() {
           >
             Clubs / Societies
           </button>
-          <button
+          {/* <button
             className={`py-2 px-4 ${
               activeTab === "users"
                 ? "border-blue-400 border-2 rounded-sm"
@@ -56,7 +56,7 @@ function Admin() {
             onClick={() => setActiveTab("users")}
           >
             Users
-          </button>
+          </button> */}
         </div>
 
         {activeTab === "carousel" && <AdminCarousel />}

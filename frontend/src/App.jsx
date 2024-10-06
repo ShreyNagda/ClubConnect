@@ -17,6 +17,7 @@ import Clubs from "./Clubs";
 import Society from "./Society";
 import Club from "./Club";
 import Societies from "./Societies";
+import EditClub from "./Components/EditClub";
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 axios.defaults.withCredentials = true;
@@ -51,6 +52,13 @@ function App() {
             <Route path="/signup" Component={Signup} />
             <Route path="/admin" Component={Admin} />
             <Route path="/club/add" Component={AddClub} />
+            <Route
+              path="/club/edit"
+              Component={EditClub}
+              onLeave={() => {
+                console.log("Left Edit page");
+              }}
+            />
             <Route path="/profile" Component={Profile} />
             <Route path="/clubs" Component={Clubs} />
             <Route path="/clubs/:id" Component={Club} />

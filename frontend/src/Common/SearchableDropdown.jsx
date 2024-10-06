@@ -9,10 +9,10 @@ const fetchUsers = async () => {
   return data; // Assuming the response contains an array of users
 };
 
-const SearchableDropdown = ({ handleFacultyIncharge }) => {
+const SearchableDropdown = ({ handleFacultyIncharge, value }) => {
   const { data: users, isLoading, error } = useQuery("users", fetchUsers);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState(value || []);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error fetching users</div>;
@@ -31,7 +31,7 @@ const SearchableDropdown = ({ handleFacultyIncharge }) => {
       toast.error("Cannot be faculty incharge");
     } else {
       setSelectedUsers((prev) => {
-        handleFacultyIncharge([...prev.map((user) => user._id), user._id]);
+        handleFacultyIncharge([...prev, user]);
         return [...prev, user];
       });
     }
@@ -77,6 +77,7 @@ const SearchableDropdown = ({ handleFacultyIncharge }) => {
             <div className="flex gap-2 rounded-sm m-1 bg-gray-300 p-2 flex-wrap">
               <p>{user.name}</p>
               <button
+                type="button"
                 onClick={() => {
                   setSelectedUsers((prev) =>
                     prev.filter((item) => item != user)
