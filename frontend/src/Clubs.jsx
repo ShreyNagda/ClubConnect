@@ -27,10 +27,13 @@ function Clubs() {
   };
   const joinClub = async (club) => {
     if (!document.cookie.includes("token")) {
+      console.log(document.cookie);
       navigate("/notloggedin");
     }
     try {
       const token = document.cookie.split("=")[1];
+      console.log();
+      console.log(token);
       const res = await axios.post(`/users/${token}/join-club`, {
         clubId: club._id,
       });
