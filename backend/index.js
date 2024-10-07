@@ -23,10 +23,16 @@ app.get("/", (req, res) => {
 });
 
 app.use(
-  cors({
-    origin: "http://localhost:5173", // Replace with your frontend URL
-    credentials: true,
-  })
+  cors(
+    {
+      origin: process.env.FRONTEND_URL, // Replace with your frontend URL
+      credentials: true,
+    },
+    {
+      origin: "http://localhost:5173", // Replace with your frontend URL
+      credentials: true,
+    }
+  )
 );
 app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ extended: true, limit: "100mb" }));
