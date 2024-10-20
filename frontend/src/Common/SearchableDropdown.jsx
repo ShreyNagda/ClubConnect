@@ -34,7 +34,7 @@ const SearchableDropdown = ({ handleFacultyIncharge, value }) => {
         return [...prev, user];
       });
     }
-    setSearchQuery(""); // Reset search query after selection
+    setSearchQuery("");
   };
 
   return (

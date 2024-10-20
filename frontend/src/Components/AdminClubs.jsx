@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import Modal from "../Common/Modal"; // Import your reusable Modal component
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 // Fetch clubs data using axios and react-query
 const fetchClubs = async () => {
@@ -12,12 +12,17 @@ const fetchClubs = async () => {
   return data;
 };
 function AdminClubs() {
+  const location = useLocation();
   const {
     data: clubs,
     isLoading,
     error,
     refetch,
   } = useQuery("clubs", fetchClubs);
+
+  useEffect(() => {
+    refetch();
+  }, [location]);
 
   const [selectedClub, setSelectedClub] = useState(null); // Track the selected club for deletion
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
@@ -45,9 +50,7 @@ function AdminClubs() {
   };
 
   const onEditClub = (club) => {
-    navigate(`/club/edit`, { state: club }).then(() => {
-      refetch();
-    });
+    navigate(`/club/edit`, { state: club });
   };
   if (isLoading) return <div>Loading clubs...</div>;
   if (error) return <div>Error fetching clubs!</div>;

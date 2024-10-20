@@ -50,7 +50,7 @@ function Carousel() {
   if (isLoading)
     return (
       <div>
-        <img src={Fun} alt="" />
+        <img src={Fun} alt="" className="w-full max-w-4xl mx-auto" />
       </div>
     );
   if (error) return <div>Error loading carousel data!</div>;

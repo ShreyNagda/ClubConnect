@@ -88,17 +88,10 @@ function AddClub({ clubData }) {
             <textarea
               className="border px-1 py-1 rounded-sm w-full"
               rows={10}
-              maxLength={1000}
-              placeholder="Enter Club / Society Description"
+              placeholder="Enter Club / Society Description in Markown (md)"
               value={desc}
-              onChange={(ev) => {
-                setTotalCount(ev.target.value.length);
-                setDesc(ev.target.value);
-              }}
+              onChange={(ev) => setDesc(ev.target.value)}
             />
-            <div className="text-right text-slate-400">
-              {totalCount} / {1000}
-            </div>
           </div>
           <input
             type="number"

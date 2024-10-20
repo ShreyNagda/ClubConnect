@@ -10,10 +10,6 @@ function EditClub() {
   const location = useLocation();
   const clubData = location.state;
   const filePickerRef = useRef(null);
-
-  const [totalCount, setTotalCount] = useState(
-    clubData["description"].length || 0
-  );
   const [file, setFile] = useState(clubData["logo"] || null);
   const [previewFile, setPreviewFile] = useState(clubData["logo"] || null);
   const [facultyIncharge, setFacultyIncharge] = useState(
@@ -26,6 +22,8 @@ function EditClub() {
   const [desc, setDesc] = useState(clubData["description"]);
   const [type, setType] = useState(clubData["type"]);
   const [year, setYear] = useState(clubData["established_year"]);
+
+  console.log(file);
 
   function handleFileClick(ev) {
     filePickerRef.current.click();
@@ -90,22 +88,13 @@ function EditClub() {
             }}
             required
           />
-          <div className="w-full">
-            <textarea
-              className="border px-1 py-1 rounded-sm w-full"
-              rows={10}
-              maxLength={1000}
-              placeholder="Enter Club / Society Description"
-              value={desc}
-              onChange={(ev) => {
-                setTotalCount(ev.target.value.length);
-                setDesc(ev.target.value);
-              }}
-            />
-            <div className="text-right text-slate-400">
-              {totalCount} / {1000}
-            </div>
-          </div>
+          <textarea
+            className="border px-1 py-1 rounded-sm w-full"
+            rows={10}
+            placeholder="Enter Club / Society Description"
+            value={desc}
+            onChange={(ev) => setDesc(ev.target.value)}
+          />
           <input
             type="number"
             placeholder="Enter Established Year"
@@ -147,7 +136,10 @@ function EditClub() {
               value={clubData["faculty_incharge"]}
             />
           </div>
-          <ToggleButton onToggle={(value) => setType(value.toLowerCase())} />
+          <ToggleButton
+            onToggle={(value) => setType(value.toLowerCase())}
+            value={type}
+          />
           <input
             type="submit"
             value={"Edit Club"}

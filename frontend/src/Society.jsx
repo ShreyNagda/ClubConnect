@@ -2,6 +2,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/github.css";
 
 function Society() {
   // const [club, setClub] = useState(null);
@@ -33,11 +38,19 @@ function Society() {
           <img
             src={club.logo}
             alt={club.name}
-            className="w-32 h-32 md:w-96 md:h-96 object-cover"
+            className="w-32 h-32 md:w-96 md:h-96 object-cover rounded-md"
           />
           <h1 className="text-2xl font-bold mt-2">{club.name}</h1>
           <div className="font-bold text-lg">Since {club.established_year}</div>
-          <p className="mt-1">{club.description}</p>
+          <div className="prose prose-md">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeRaw, rehypeHighlight]}
+              className="mt-1 max-w-3xl"
+            >
+              {club.description}
+            </ReactMarkdown>
+          </div>
           <p>{club.tags.join(", ")}</p>
           <div className="flex gap-1">
             {club.faculty_incharge.map((faculty) => (
