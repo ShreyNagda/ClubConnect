@@ -9,7 +9,6 @@ import { Link, useNavigate } from "react-router-dom";
 // Fetch clubs data using axios and react-query
 const fetchClubs = async () => {
   const { data } = await axios.get("clubs");
-  console.log(data);
   return data;
 };
 function AdminClubs() {
@@ -25,7 +24,6 @@ function AdminClubs() {
 
   const handleDeleteClick = (club) => {
     setSelectedClub(club); // Set the selected club
-    console.log(club.faculty_incharge);
     setIsModalOpen(true); // Open confirmation modal
   };
 
@@ -36,7 +34,6 @@ function AdminClubs() {
       setIsModalOpen(false);
       refetch(); // Refresh clubs list after deletion
     } catch (err) {
-      console.log(err);
       toast.error("Failed to delete club.");
     }
   };
@@ -48,9 +45,7 @@ function AdminClubs() {
   };
 
   const onEditClub = (club) => {
-    console.log(club._id);
     navigate(`/club/edit`, { state: club }).then(() => {
-      console.log("refetch");
       refetch();
     });
   };

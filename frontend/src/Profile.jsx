@@ -53,11 +53,7 @@ function Profile() {
           </Link>
         </div>
       ) : (
-        <div>
-          {user["clubs"].map((club) => {
-            console.log(club);
-          })}
-        </div>
+        <div></div>
       )}
       <Link to={"/logout"} className="bg-blue-400 px-4 py-2 rounded-sm mt-4">
         Logout

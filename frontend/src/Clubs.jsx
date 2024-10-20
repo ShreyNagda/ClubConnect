@@ -11,36 +11,30 @@ function Clubs() {
     if (document.cookie.includes("token")) {
       const token = document.cookie.split("=")[1];
       const res = await axios.get(`/users/${token}`);
-      console.log(res);
     }
   };
 
   const fetchData = async () => {
     const res = await axios.get("/clubs?type=club");
-    console.log(res);
     return res.data;
   };
 
   const viewClub = (club) => {
     navigate(`/clubs/${club._id}`, { state: { club } });
-    console.log(club);
   };
   const joinClub = async (club) => {
     if (!document.cookie.includes("token")) {
-      console.log(document.cookie);
       navigate("/notloggedin");
     }
     try {
       const token = document.cookie.split("=")[1];
-      console.log();
-      console.log(token);
+
       const res = await axios.post(`/users/${token}/join-club`, {
         clubId: club._id,
       });
       toast.success(res.data["message"]);
-      console.log(res);
     } catch (err) {
-      console.log(err);
+      toast.error("An error occurred");
     }
   };
   const { data: clubs, error, loading } = useQuery("clubs", fetchData);

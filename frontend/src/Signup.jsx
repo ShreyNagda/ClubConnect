@@ -24,8 +24,6 @@ function Signup() {
       return;
     }
 
-    console.log(phone);
-
     try {
       const response = await axios.post("auth/register", {
         name,
@@ -36,13 +34,9 @@ function Signup() {
         phone,
       });
 
-      // Handle success (e.g., save token, redirect, etc.)
-      console.log("Signup successful:", response);
       toast.success("Signup successful! Please log in.");
       navigate("/login"); // Redirect to login page after successful signup
     } catch (error) {
-      // Handle error (e.g., show error message)
-      console.error("Error signing up:", error.response?.data || error.message);
       toast.error(
         `Error signing up: ${error.response?.data.message || error.message}`
       );

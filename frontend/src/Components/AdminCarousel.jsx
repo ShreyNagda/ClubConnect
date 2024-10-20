@@ -49,7 +49,6 @@ function AdminCarousel() {
   const handleSubmit = async (ev) => {
     ev.preventDefault();
     try {
-      console.log({ file, text, url });
       var data = new FormData();
       data.append("image", file);
       data.append("text", text);
@@ -68,7 +67,6 @@ function AdminCarousel() {
       reset();
       setCurrentImage(null);
     } catch (err) {
-      console.log(err);
       toast.error("Failed to add/update image.");
     }
   };
@@ -92,7 +90,6 @@ function AdminCarousel() {
       setIsModalOpen(false);
       refetch();
     } catch (err) {
-      console.log(err);
       toast.error("Failed to delete image.");
     }
   };

@@ -10,7 +10,6 @@ function Societies() {
     if (document.cookie.includes("token")) {
       const token = document.cookie.split("=")[1];
       const res = await axios.get(`/users/${token}`);
-      console.log(res);
     }
   };
 
@@ -22,7 +21,6 @@ function Societies() {
 
   const viewClub = (club) => {
     navigate(`/societies/${club._id}`);
-    console.log(club);
   };
   const joinClub = async (club) => {
     if (!document.cookie.includes("token")) {
@@ -34,8 +32,11 @@ function Societies() {
         clubId: club._id,
       });
       toast.success(res.data["message"]);
-      console.log(res);
-    } catch (err) {}
+    } catch (err) {
+      toast.error(
+        `Error logging in: ${error.response?.data.message || error.message}`
+      );
+    }
   };
   const { data: clubs, error, loading } = useQuery("societies", fetchData);
   const { data: user, errorUser, loadingUser } = useQuery("user", fetchData);

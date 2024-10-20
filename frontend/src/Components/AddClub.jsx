@@ -39,13 +39,11 @@ function AddClub({ clubData }) {
 
   function handleFacultyIncharge(value) {
     setFacultyIncharge(value);
-    console.log(value);
   }
 
   async function handleSubmit(ev) {
     ev.preventDefault();
     const facultyData = facultyIncharge.map((user) => user._id);
-    console.log(facultyData);
     try {
       const formData = new FormData();
       formData.append("name", clubName);
@@ -58,7 +56,6 @@ function AddClub({ clubData }) {
       toast.success("Club added successfully!");
       navigate(-1);
     } catch (err) {
-      console.log(err);
       toast.error(err.message);
     }
   }

@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 const fetchUsers = async () => {
   const { data } = await axios.get("users");
-  console.log(data);
+
   return data; // Assuming the response contains an array of users
 };
 
@@ -26,7 +26,6 @@ const SearchableDropdown = ({ handleFacultyIncharge, value }) => {
   );
 
   const handleSelectUser = (user) => {
-    console.log(user.client_role);
     if (user.client_role !== "faculty") {
       toast.error("Cannot be faculty incharge");
     } else {

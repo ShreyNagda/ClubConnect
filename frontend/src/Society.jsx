@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 function Society() {
   // const [club, setClub] = useState(null);
   const fetchClub = async () => {
-    console.log(window.location.pathname);
     const res = await axios.get(
       `/clubs/${window.location.pathname.split("/")[2]}`
     );

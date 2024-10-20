@@ -52,13 +52,7 @@ function App() {
             <Route path="/signup" Component={Signup} />
             <Route path="/admin" Component={Admin} />
             <Route path="/club/add" Component={AddClub} />
-            <Route
-              path="/club/edit"
-              Component={EditClub}
-              onLeave={() => {
-                console.log("Left Edit page");
-              }}
-            />
+            <Route path="/club/edit" Component={EditClub} />
             <Route path="/profile" Component={Profile} />
             <Route path="/clubs" Component={Clubs} />
             <Route path="/clubs/:id" Component={Club} />

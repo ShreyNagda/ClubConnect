@@ -17,14 +17,10 @@ function Login() {
         email,
         password,
       });
-      // Handle success (e.g., save token, redirect, etc.)
-      console.log("Login successful:", response);
       toast.success(`Login successfully as ${response.data.user.username}`);
       window.localStorage.setItem("role", response.data.user.role);
       navigate("/");
     } catch (error) {
-      // Handle error (e.g., show error message)
-      console.error("Error logging in:", error.response?.data || error.message);
       toast.error(
         `Error logging in: ${error.response?.data.message || error.message}`
       );
