@@ -10,7 +10,6 @@ export const createUser = async (req, res) => {
     const { name, username, email, phone, password, client_role, db_role } =
       req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(req.body);
 
     const newUser = new User({
       name,
@@ -84,7 +83,7 @@ export const getUserById = async (req, res) => {
   try {
     const token = req.params.token;
     const decoded = jwt.decode(token);
-    console.log(decoded.id);
+
     const id = decoded.id;
     const user = await User.findById(id)
       .populate("clubs", "name")
@@ -117,7 +116,7 @@ export const getAllUsers = async (req, res) => {
 // Update a user by ID
 export const updateUser = async (req, res) => {
   let file = req.file;
-  console.log(file);
+
   try {
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -215,7 +214,6 @@ export const joinClub = async (req, res) => {
       res.json({ message: "Already joined club" });
     }
   } catch (err) {
-    console.log(err.message);
     res.status(500).json({ message: "Error joining club", error: err.message });
   }
 };

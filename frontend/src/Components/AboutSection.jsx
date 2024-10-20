@@ -1,3 +1,4 @@
+import banner from "../assets/apsit_thane_cover.jpeg";
 function AboutSection() {
   return (
     <section className="w-full flex justify-center my-3">
@@ -11,7 +12,7 @@ function AboutSection() {
           NBA accreditation with an A+ grade, reflecting its commitment to high
           academic standards and quality education.
           <img
-            src="apsit_thane_cover.jpeg"
+            src={banner}
             alt=""
             className=" w-full object-cover object-center h-64 md:h-96"
           />

@@ -50,8 +50,8 @@ function Society() {
               </div>
             ))}
           </div>
-          <p>Events Conducted: {club.events_conducted.length} events</p>
-          <p>Past Core Teams: {club.past_core_teams.length} teams</p>
+          <p>Events Conducted: 3 events</p>
+          <p>Past Core Teams: 2 teams</p>
         </div>
       )}
     </div>

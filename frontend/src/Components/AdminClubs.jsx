@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 // Fetch clubs data using axios and react-query
 const fetchClubs = async () => {
   const { data } = await axios.get("clubs");
+  console.log(data);
   return data;
 };
 function AdminClubs() {
@@ -84,13 +85,17 @@ function AdminClubs() {
           <tbody>
             {clubs.map((club) => (
               <tr key={club._id} className="border-b">
-                <td className="px-4 py-2">{club.name}</td>
-                <td className="px-4 py-2">{club.established_year}</td>
-                <td className="px-4 py-2">{club.club_admin?.name || "N/A"}</td>
-                <td className="px-4 py-2">
+                <td className="px-4 py-2 text-center">{club.name}</td>
+                <td className="px-4 py-2 text-center">
+                  {club.established_year}
+                </td>
+                <td className="px-4 py-2 text-center">
+                  {club.club_admin?.name || "N/A"}
+                </td>
+                <td className="px-4 py-2 text-center">
                   {club.type[0].toUpperCase() + club.type.substring(1)}
                 </td>
-                <td className="px-4 py-2">
+                <td className="px-4 py-2 text-center">
                   {club.faculty_incharge?.map((incharge) => (
                     <p className="px-1">{incharge.name}</p>
                   )) || "N/A"}

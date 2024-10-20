@@ -1,7 +1,6 @@
 export const checkAdmin = (req, res, next) => {
   try {
     const { client_role, db_role } = req.user;
-    console.log(req.user); // Assuming req.user contains authenticated user details
 
     // Check if user has the role of HOD or is an admin
     if (client_role === "hod" || db_role === "admin") {

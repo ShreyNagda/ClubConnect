@@ -13,8 +13,8 @@ import multer from "multer";
 
 // Multer configuration for handling image uploads
 const upload = multer({
-  storage: multer.memoryStorage(), // Store images in memory as buffer
-  limits: { fileSize: 50 * 1024 * 1024 }, // Max file size limit (50MB)
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 50 * 1024 * 1024 },
 });
 
 const router = express.Router();
@@ -22,10 +22,10 @@ const router = express.Router();
 // Create a new club - only admins can create a club
 router.post(
   "/",
-  authMiddleware, // User must be logged in
-  checkAdmin, // User must be an admin
-  upload.single("image"), // Handling image upload (for the club logo)
-  createClub // Controller function to create a club
+  authMiddleware,
+  checkAdmin,
+  upload.single("image"),
+  createClub
 );
 
 // Get all clubs (public route)
@@ -37,18 +37,13 @@ router.get("/:clubId", getClubById);
 // Update a club - only club admin or faculty in charge can update
 router.put(
   "/:clubId",
-  authMiddleware, // User must be logged in
-  checkClubAdminOrFaculty, // Only club admin or faculty in charge can update
-  upload.single("image"), // Handling image upload (for updating club logo)
-  updateClub // Controller function to update a club
+  authMiddleware,
+  checkClubAdminOrFaculty,
+  upload.single("image"),
+  updateClub
 );
 
 // Delete a club - only club admin or faculty in charge can delete
-router.delete(
-  "/:clubId",
-  authMiddleware, // User must be logged in
-  checkClubAdminOrFaculty, // Only club admin or faculty in charge can delete
-  deleteClub // Controller function to delete a club
-);
+router.delete("/:clubId", authMiddleware, checkClubAdminOrFaculty, deleteClub);
 
 export default router;

@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import clubs from "../assets/clubs.jpeg";
 
 const ClubSection = () => {
   return (
@@ -16,7 +17,7 @@ const ClubSection = () => {
           share similar passions.
         </p>
         <img
-          src="clubs.jpeg" // Example image from Unsplash
+          src={clubs}
           alt="Engineering students collaborating in a club"
           className="w-full h-64 object-cover rounded-lg mb-6"
         />

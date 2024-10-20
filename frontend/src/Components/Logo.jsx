@@ -4,7 +4,7 @@ function Logo() {
       className="font-lato font-bold text-2xl hover:scale-105 transition-all"
       href="/"
     >
-      ClubConnect
+      APSIT ClubConnect
     </a>
   );
 }

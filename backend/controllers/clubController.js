@@ -9,9 +9,14 @@ export const upload = multer({ storage });
 // Create a new club
 export const createClub = async (req, res) => {
   try {
-    console.log(req.body);
-    const { name, description, established_year, type, faculty_incharge } =
-      req.body;
+    const {
+      name,
+      description,
+      established_year,
+      type,
+      faculty_incharge,
+      ...others
+    } = req.body;
     let file = req.file; // Retrieve the uploaded file from multer
 
     let base64Image;
@@ -31,6 +36,7 @@ export const createClub = async (req, res) => {
       established_year,
       type: type || "club",
       faculty_incharge,
+      ...others,
       logo: base64Image ? `data:image/jpeg;base64,${base64Image}` : undefined, // Save as base64
     });
 
@@ -46,9 +52,6 @@ export const createClub = async (req, res) => {
 // Get all clubs
 export const getAllClubs = async (req, res) => {
   try {
-    if (req.query) {
-      console.log(req.query);
-    }
     const clubs = await Club.find(req.query)
       .populate("faculty_incharge")
       .populate("events_conducted");
@@ -67,7 +70,7 @@ export const getClubById = async (req, res) => {
     const club = await Club.findById(clubId)
       .populate("faculty_incharge")
       .populate("events_conducted");
-    console.log(club);
+
     if (!club) {
       return res.status(404).json({ message: "Club not found" });
     }
@@ -83,8 +86,14 @@ export const getClubById = async (req, res) => {
 export const updateClub = async (req, res) => {
   try {
     const { clubId } = req.params;
-    const { name, description, established_year, type, faculty_incharge } =
-      req.body;
+    const {
+      name,
+      description,
+      established_year,
+      type,
+      faculty_incharge,
+      ...others
+    } = req.body;
     let file = req.file; // Retrieve the uploaded file from multer
 
     let base64Image;
@@ -106,7 +115,8 @@ export const updateClub = async (req, res) => {
         established_year,
         type,
         faculty_incharge,
-        logo: base64Image,
+        ...others,
+        logo: `data:image/jpeg;base64,${base64Image}`,
       },
       { new: true }
     );

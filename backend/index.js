@@ -14,9 +14,7 @@ configDotenv();
 const app = express();
 const PORT = process.env.port || 3000;
 
-await mongoose.connect(process.env.MONGO_URI).then(() => {
-  console.log("Database Connected!");
-});
+await mongoose.connect(process.env.MONGO_URI);
 
 app.get("/", (req, res) => {
   res.json("Server Running");
