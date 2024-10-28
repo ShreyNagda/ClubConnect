@@ -4,7 +4,7 @@ import clubs from "../assets/clubs.jpeg";
 
 const ClubSection = () => {
   return (
-    <section className="w-full my-5">
+    <section className="my-5 m-2 mt-10">
       <div className="w-clamp mx-auto text-left shadow-lg p-2 pb-4">
         <h2 className="text-3xl font-bold mb-6 md:text-center">
           Why Clubs are Essential in Engineering Colleges

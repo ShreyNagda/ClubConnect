@@ -11,7 +11,7 @@ export default {
         roboto: ["Roboto", "sans-serif"],
       },
       width: {
-        clamp: "min(100vw, 896px)",
+        clamp: "min(95vw, 896px)",
       },
     },
   },

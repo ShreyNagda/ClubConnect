@@ -9,23 +9,23 @@ import ToggleButton from "../Common/ToggleButton";
 function EditClub() {
   const location = useLocation();
   const clubData = location.state;
+  console.log(clubData["logo"]);
   const filePickerRef = useRef(null);
   const [file, setFile] = useState(clubData["logo"] || null);
   const [previewFile, setPreviewFile] = useState(clubData["logo"] || null);
   const [facultyIncharge, setFacultyIncharge] = useState(
     clubData["faculty_incharge"] || []
   );
+  const [clubAdmin, setClubAdmin] = useState(clubData["club_admin"] || []);
 
   const navigate = useNavigate();
 
   const [clubName, setClubName] = useState(clubData["name"]);
   const [desc, setDesc] = useState(clubData["description"]);
-  const [type, setType] = useState(clubData["type"]);
+  const [type, setType] = useState(clubData["type"] || "club");
   const [year, setYear] = useState(clubData["established_year"]);
 
-  console.log(file);
-
-  function handleFileClick(ev) {
+  function handleFileClick() {
     filePickerRef.current.click();
   }
 
@@ -41,13 +41,18 @@ function EditClub() {
     }
   }
 
-  function handleFacultyIncharge(value) {
+  function handleChange(value) {
     setFacultyIncharge(value);
+  }
+
+  function handleClubAdmin(value) {
+    setClubAdmin(value);
   }
 
   async function handleSubmit(ev) {
     ev.preventDefault();
     const facultyData = facultyIncharge.map((user) => user._id);
+    const clubAdminData = clubAdmin.map((user) => user._id);
     try {
       const formData = new FormData();
       formData.append("name", clubName);
@@ -55,6 +60,7 @@ function EditClub() {
       formData.append("established_year", year);
       formData.append("image", file);
       formData.append("faculty_incharge", facultyData);
+      formData.append("club_admin", clubAdminData);
       formData.append("type", type);
       const res = await axios.put(`/clubs/${clubData["_id"]}`, formData);
       toast.success("Club added successfully!");
@@ -132,8 +138,17 @@ function EditClub() {
           <div className="w-full flex items-center rounded-sm">
             <div className="text-slate-400 mr-2">Select Faculty Incharge</div>
             <SearchableDropdown
-              handleFacultyIncharge={handleFacultyIncharge}
-              value={clubData["faculty_incharge"]}
+              handleChange={handleChange}
+              value={facultyIncharge || clubData["faculty_incharge"]}
+              type={"faculty"}
+            />
+          </div>
+          <div className="w-full flex items-center rounded-sm">
+            <div className="text-slate-400 mr-2">Select Club Admin</div>
+            <SearchableDropdown
+              handleChange={handleClubAdmin}
+              value={clubAdmin || clubData["club_admin"]}
+              type={"club_admin"}
             />
           </div>
           <ToggleButton

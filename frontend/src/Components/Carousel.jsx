@@ -2,6 +2,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Fun from "../assets/fun.jpg";
+import { Link } from "react-router-dom";
 
 function Carousel() {
   const fetchData = async () => {
@@ -50,29 +51,29 @@ function Carousel() {
   if (isLoading)
     return (
       <div>
-        <img src={Fun} alt="" className="w-full max-w-4xl mx-auto" />
+        <img
+          src={Fun}
+          alt=""
+          className="w-full object-cover h-60 md:h-96 overflow-hidden lg:rounded-md"
+        />
       </div>
     );
   if (error) return <div>Error loading carousel data!</div>;
 
   return (
-    <div className="relative top-[0px] w-full max-w-4xl mx-auto overflow-hidden md:py-2">
+    <div className="relative top-[0px]  w-full max-w-4xl mx-auto overflow-hidden md:py-2">
       {/* Carousel Wrapper */}
       <div
         className="flex transition-transform duration-500 ease-in-out"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
         {images.map((image, index) => (
-          <div
+          <Link
             className={
               "min-w-full relative " + `${image.url && "cursor-pointer"}`
             }
             key={index}
-            onClick={() => {
-              if (image.url) {
-                window.open(image.url, "_blank");
-              }
-            }}
+            to={image.url && `/${image.url}`}
           >
             <img
               src={image.image}
@@ -86,7 +87,7 @@ function Carousel() {
                 {image.text}
               </h2>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 

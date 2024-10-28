@@ -13,14 +13,9 @@ const userSchema = new mongoose.Schema({
   phone: { type: String, unique: true },
   client_role: {
     type: String,
-    enum: ["student", "faculty", "hod"],
+    enum: ["student", "faculty", "admin", "club_admin"],
     default: "student",
   }, // Default set to 'student'
-  db_role: {
-    type: String,
-    enum: ["user", "club_admin", "admin"],
-    default: "user",
-  }, // Default set to 'user'
   profile_pic: { type: String },
   clubs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Club" }],
   events_attended: [{ type: mongoose.Schema.Types.ObjectId, ref: "Event" }],

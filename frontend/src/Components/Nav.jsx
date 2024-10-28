@@ -25,6 +25,13 @@ function CheckAdminAndLink() {
     >
       Admin
     </NavLink>
+  ) : window.localStorage.getItem("role") === "club_admin" ? (
+    <NavLink
+      to="/manage-club"
+      className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
+    >
+      Manage Club
+    </NavLink>
   ) : (
     <NavLink
       to="/profile"
@@ -57,9 +64,9 @@ function UserNavLinks() {
       <NavLink to="/" className="aria-[current=page]:text-blue-400">
         Home
       </NavLink>
-      <NavLink to="/events" className="aria-[current=page]:text-blue-400">
+      {/* <NavLink to="/events" className="aria-[current=page]:text-blue-400">
         Events
-      </NavLink>
+      </NavLink> */}
       <NavLink to="/clubs" className="aria-[current=page]:text-blue-400">
         Clubs
       </NavLink>

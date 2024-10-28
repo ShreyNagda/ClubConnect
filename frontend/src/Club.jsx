@@ -9,11 +9,12 @@ import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github.css";
 
 function Club() {
-  // const [club, setClub] = useState(null);
+  const [id, setId] = useState(null);
   const fetchClub = async () => {
     const res = await axios.get(
       `/clubs/${window.location.pathname.split("/")[2]}`
     );
+    setId(res.data._id);
     return res.data;
   };
 
@@ -21,7 +22,7 @@ function Club() {
     fetchClub();
   }, []);
 
-  const { data: club, error, loading } = useQuery("club", fetchClub);
+  const { data: club, error, loading } = useQuery(`club${id}`, fetchClub);
 
   if (error) return <div>Error</div>;
   if (loading) return <div>Loading</div>;
@@ -52,17 +53,22 @@ function Club() {
             </ReactMarkdown>
           </div>
           <p>{club.tags.join(", ")}</p>
-          <div className="flex gap-1">
-            {club.faculty_incharge.map((faculty) => (
-              <div
-                key={faculty._id}
-                className="bg-slate-400 py-1 px-2 rounded-sm"
-              >
-                {faculty.name}
-              </div>
-            ))}
+          <div>
+            Faculty Incharge
+            <div className="flex gap-1">
+              {club.faculty_incharge.map((faculty) => (
+                <div
+                  key={faculty._id}
+                  className="bg-slate-400 py-1 px-2 rounded-sm"
+                >
+                  {faculty.name}
+                </div>
+              ))}
+            </div>
           </div>
-          <p>Events Conducted: 5 events</p>
+          <div>
+            <p>Events Conducted: 5 events</p>
+          </div>
           <p>Past Core Teams: 2 teams</p>
         </div>
       )}

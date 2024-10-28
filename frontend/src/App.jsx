@@ -18,6 +18,7 @@ import Society from "./Society";
 import Club from "./Club";
 import Societies from "./Societies";
 import EditClub from "./Components/EditClub";
+import NotAClubAdmin from "./Components/NotAClubAdmin";
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 axios.defaults.withCredentials = true;
@@ -40,7 +41,6 @@ function App() {
           rtl={false}
           pauseOnFocusLoss
           draggable
-          pauseOnHover
           theme="dark"
           // className="!absolute !top-0 !right-0 m-4"
         />
@@ -59,6 +59,7 @@ function App() {
             <Route path="/societies/:id" Component={Society} />
             <Route path="/societies" Component={Societies} />
             <Route path="/notanadmin" Component={NotAnAdmin} />
+            <Route path="/notaclubadmin" Component={NotAClubAdmin} />
             <Route path="/notloggedin" Component={NotLoggedIn} />
           </Routes>
         </div>

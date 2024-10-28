@@ -1,14 +1,13 @@
 import { Router } from "express";
 import {
-  createUser,
   getUserById,
   updateUser,
   deleteUser,
   changePassword,
   attendEvent,
   joinClub,
-  loginUser,
   getAllUsers,
+  makeClubAdmin,
 } from "../controllers/userController.js";
 
 import {
@@ -18,6 +17,7 @@ import {
 } from "../controllers/eventController.js";
 
 import { authMiddleware } from "../middleware/authMiddleware.js";
+import { checkAdmin } from "../middleware/checkAdmin.js";
 import multer from "multer";
 
 const router = Router();
@@ -54,5 +54,8 @@ router.get(
 
 // Club joining
 router.post("/:token/join-club", authMiddleware, joinClub);
+
+// Admin makes a  user a club admin
+router.post("/:token/make-admin", authMiddleware, checkAdmin, makeClubAdmin);
 
 export default router;

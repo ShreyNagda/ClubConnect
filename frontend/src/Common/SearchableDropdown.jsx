@@ -9,7 +9,8 @@ const fetchUsers = async () => {
   return data; // Assuming the response contains an array of users
 };
 
-const SearchableDropdown = ({ handleFacultyIncharge, value }) => {
+const SearchableDropdown = ({ handleChange, value, type }) => {
+  console.log(value);
   const { data: users, isLoading, error } = useQuery("users", fetchUsers);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUsers, setSelectedUsers] = useState(value || []);
@@ -26,11 +27,13 @@ const SearchableDropdown = ({ handleFacultyIncharge, value }) => {
   );
 
   const handleSelectUser = (user) => {
-    if (user.client_role !== "faculty") {
+    if (type === "faculty" && user.client_role !== "faculty") {
       toast.error("Cannot be faculty incharge");
+    } else if (type === "club_admin" && user.client_role !== "student") {
+      toast.error("Cannot be club admin, Is a " + user.client_role);
     } else {
       setSelectedUsers((prev) => {
-        handleFacultyIncharge([...prev, user]);
+        handleChange([...prev, user]);
         return [...prev, user];
       });
     }

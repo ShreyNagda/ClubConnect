@@ -20,11 +20,9 @@ export const checkClubAdminOrFaculty = async (req, res, next) => {
 
     // Check if user is a club_admin with the correct club_id
     const isClubAdmin =
-      user.db_role === "club_admin" &&
-      user.club_id &&
-      user.club_id.equals(clubId);
+      user.client_role === "club_admin" && user.club_id.equals(clubId);
 
-    const isAdmin = user.db_role === "admin";
+    const isAdmin = user.client_role === "admin";
 
     if (isFacultyInCharge || isClubAdmin || isAdmin) {
       // User is either the club admin or the faculty in charge

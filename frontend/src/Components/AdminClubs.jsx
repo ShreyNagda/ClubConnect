@@ -18,7 +18,7 @@ function AdminClubs() {
     isLoading,
     error,
     refetch,
-  } = useQuery("clubs", fetchClubs);
+  } = useQuery("admin-clubs", fetchClubs);
 
   useEffect(() => {
     refetch();
@@ -50,6 +50,7 @@ function AdminClubs() {
   };
 
   const onEditClub = (club) => {
+    console.log(club);
     navigate(`/club/edit`, { state: club });
   };
   if (isLoading) return <div>Loading clubs...</div>;
@@ -74,7 +75,6 @@ function AdminClubs() {
             <tr>
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">Established Year</th>
-              <th className="px-4 py-2">Club Admin</th>
               <th className="px-4 py-2">Faculty In-charge</th>
               <th className="px-4 py-2">Type</th>
               <th className="px-4 py-2">Actions</th>
@@ -87,9 +87,7 @@ function AdminClubs() {
                 <td className="px-4 py-2 text-center">
                   {club.established_year}
                 </td>
-                <td className="px-4 py-2 text-center">
-                  {club.club_admin?.name || "N/A"}
-                </td>
+
                 <td className="px-4 py-2 text-center">
                   {club.type[0].toUpperCase() + club.type.substring(1)}
                 </td>

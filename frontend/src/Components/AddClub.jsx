@@ -37,7 +37,7 @@ function AddClub({ clubData }) {
     }
   }
 
-  function handleFacultyIncharge(value) {
+  function handleChange(value) {
     setFacultyIncharge(value);
   }
 
@@ -128,7 +128,7 @@ function AddClub({ clubData }) {
           </div>
           <div className="w-full flex items-center rounded-sm">
             <div className="text-slate-400 mr-2">Select Faculty Incharge</div>
-            <SearchableDropdown handleFacultyIncharge={handleFacultyIncharge} />
+            <SearchableDropdown handleChange={handleChange} />
           </div>
           <ToggleButton onToggle={(value) => setType(value.toLowerCase())} />
           <input

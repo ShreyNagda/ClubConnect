@@ -6,7 +6,9 @@ import AdminCarousel from "./Components/AdminCarousel";
 import AdminClubs from "./Components/AdminClubs";
 
 function Admin() {
-  const [activeTab, setActiveTab] = useState("carousel");
+  const [activeTab, setActiveTab] = useState(
+    window.localStorage.getItem("activeTab") || "carousel"
+  );
   const [carouselImages, setCarouselImages] = useState([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(null);
@@ -19,6 +21,11 @@ function Admin() {
     const role = window.localStorage.getItem("role");
     if (role !== "admin") navigate("/notanadmin");
   }, [window.localStorage.getItem("role")]);
+
+  function changeTab(tab) {
+    setActiveTab(tab);
+    window.localStorage.setItem("activeTab", tab);
+  }
 
   return (
     <>
@@ -33,7 +40,7 @@ function Admin() {
                 ? "border-blue-400 border-2 rounded-sm"
                 : "bg-transparent"
             }`}
-            onClick={() => setActiveTab("carousel")}
+            onClick={() => changeTab("carousel")}
           >
             Carousel Images
           </button>
@@ -43,20 +50,10 @@ function Admin() {
                 ? "border-blue-400 border-2 rounded-sm"
                 : "bg-transparent"
             }`}
-            onClick={() => setActiveTab("clubs")}
+            onClick={() => changeTab("clubs")}
           >
             Clubs / Societies
           </button>
-          {/* <button
-            className={`py-2 px-4 ${
-              activeTab === "users"
-                ? "border-blue-400 border-2 rounded-sm"
-                : "bg-transparent"
-            }`}
-            onClick={() => setActiveTab("users")}
-          >
-            Users
-          </button> */}
         </div>
 
         {activeTab === "carousel" && <AdminCarousel />}

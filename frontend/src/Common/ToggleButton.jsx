@@ -8,7 +8,7 @@ function ToggleButton({
 }) {
   // Initialize the state based on the provided value
   const [isFirstOption, setIsFirstOption] = useState(
-    value ? value === label1 : true
+    value ? value === label1.toLowerCase() : true
   );
 
   const toggleSwitch = () => {

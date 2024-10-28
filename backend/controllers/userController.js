@@ -86,7 +86,7 @@ export const getUserById = async (req, res) => {
 
     const id = decoded.id;
     const user = await User.findById(id)
-      .populate("clubs", "name")
+      .populate("clubs", "name logo events_attended")
       .populate("events_attended", "name");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -216,4 +216,8 @@ export const joinClub = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error joining club", error: err.message });
   }
+};
+
+export const makeClubAdmin = (req, res) => {
+  // TO DO: implement making a user admin of a club
 };

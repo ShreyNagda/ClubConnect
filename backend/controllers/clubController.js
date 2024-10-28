@@ -92,10 +92,10 @@ export const updateClub = async (req, res) => {
       established_year,
       type,
       faculty_incharge,
+      club_admin,
       ...others
     } = req.body;
     let file = req.file; // Retrieve the uploaded file from multer
-
     let base64Image;
     if (file) {
       const imageBuffer = file.buffer;
@@ -107,6 +107,8 @@ export const updateClub = async (req, res) => {
       base64Image = compressedImage.toString("base64"); // Convert to base64 string
     }
 
+    console.log(base64Image);
+
     const updatedClub = await Club.findByIdAndUpdate(
       clubId,
       {
@@ -116,7 +118,7 @@ export const updateClub = async (req, res) => {
         type,
         faculty_incharge,
         ...others,
-        logo: `data:image/jpeg;base64,${base64Image}`,
+        logo: base64Image ? `data:image/jpeg;base64,${base64Image}` : undefined,
       },
       { new: true }
     );
@@ -151,3 +153,5 @@ export const deleteClub = async (req, res) => {
       .json({ message: "Error deleting club", error: error.message });
   }
 };
+
+// export const
