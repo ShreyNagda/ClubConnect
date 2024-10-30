@@ -3,59 +3,57 @@ import { BiMenu } from "react-icons/bi";
 import { IoClose, IoPerson } from "react-icons/io5";
 import { useEffect, useState } from "react";
 
-function CheckAdminAndLink() {
-  if (window.localStorage.getItem("role")) {
-    if (window.localStorage.getItem("role") === "admin") {
-      return (
+function CheckRoleAndLink() {
+  if (
+    window.localStorage.getItem("role") &&
+    window.localStorage.getItem("role") === "admin"
+  ) {
+    return (
+      <>
         <NavLink
           to="/admin"
           className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
         >
           Admin
         </NavLink>
-      );
-    }
-    // }else if(window.localStorage.getItem("role") === "")
+        <NavLink
+          to="/profile"
+          className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
+        >
+          <IoPerson className="text-2xl" />
+        </NavLink>
+      </>
+    );
+  } else if (
+    window.localStorage.getItem("role") !== null &&
+    window.localStorage.getItem("role") === "club_admin"
+  ) {
+    return (
+      <>
+        <NavLink
+          to="/clubs/manage"
+          className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
+        >
+          Manage Club
+        </NavLink>
+        <NavLink
+          to="/profile"
+          className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
+        >
+          <IoPerson className="text-2xl" />
+        </NavLink>
+      </>
+    );
+  } else {
+    return (
+      <NavLink
+        to="/profile"
+        className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
+      >
+        <IoPerson className="text-2xl" />
+      </NavLink>
+    );
   }
-  return (window.localStorage.getItem("role") !== null) &
-    (window.localStorage.getItem("role") === "admin") ? (
-    <>
-      <NavLink
-        to="/admin"
-        className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
-      >
-        Admin
-      </NavLink>
-      <NavLink
-        to="/profile"
-        className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
-      >
-        <IoPerson />
-      </NavLink>
-    </>
-  ) : window.localStorage.getItem("role") === "club_admin" ? (
-    <>
-      <NavLink
-        to="/clubs/manage"
-        className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
-      >
-        Manage Club
-      </NavLink>
-      <NavLink
-        to="/profile"
-        className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
-      >
-        <IoPerson size={25} />
-      </NavLink>
-    </>
-  ) : (
-    <NavLink
-      to="/profile"
-      className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
-    >
-      <IoPerson className="px-2 py-1" />
-    </NavLink>
-  );
 }
 
 function AdminNavLinks() {
@@ -90,7 +88,7 @@ function UserNavLinks() {
         Societies
       </NavLink>
       {window.localStorage.getItem("role") !== null ? (
-        <CheckAdminAndLink />
+        <CheckRoleAndLink />
       ) : (
         <NavLink
           to="/login"

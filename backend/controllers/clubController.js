@@ -114,10 +114,8 @@ export const updateClub = async (req, res) => {
     if (club_admin) {
       console.log(club_admin);
       for (let id of club_admin) {
-        console.log(id);
         const user = await User.findById(id);
-        console.log(user);
-        if (user.client_role !== "club_admin") {
+        if (user.client_role !== "club_admin" && user.clubs.includes(clubId)) {
           const res = await User.findByIdAndUpdate(
             id,
             {

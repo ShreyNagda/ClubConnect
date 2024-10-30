@@ -29,7 +29,11 @@ const SearchableDropdown = ({ handleChange, value, type }) => {
   const handleSelectUser = (user) => {
     if (type === "faculty" && user.client_role !== "faculty") {
       toast.error("Cannot be faculty incharge");
-    } else if (type === "club_admin" && user.client_role !== "student") {
+    } else if (
+      type === "club_admin" &&
+      user.client_role !== "student" &&
+      user.client_role !== "club_admin"
+    ) {
       toast.error("Cannot be club admin, Is a " + user.client_role);
     } else {
       setSelectedUsers((prev) => {

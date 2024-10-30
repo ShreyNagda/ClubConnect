@@ -73,24 +73,26 @@ function Clubs() {
                   View
                 </Link>
 
-                {user && window.localStorage.getItem("role") === "user" && (
-                  <>
-                    {user &&
-                    user["clubs"].map((c) => c._id).includes(club._id) ? (
-                      <p className="text-blue-400 w-full text-center p-2 border-blue-500 border-2 rounded-sm">
-                        Joined
-                      </p>
-                    ) : (
-                      <button
-                        type="button"
-                        className="bg-blue-400 w-full p-2 text-center rounded-sm"
-                        onClick={() => joinClub(club)}
-                      >
-                        Join
-                      </button>
-                    )}
-                  </>
-                )}
+                {user &&
+                  (window.localStorage.getItem("role") === "student" ||
+                    window.localStorage.getItem("role") === "club_admin") && (
+                    <>
+                      {user &&
+                      user["clubs"].map((c) => c._id).includes(club._id) ? (
+                        <p className="text-blue-400 w-full text-center p-2 border-blue-500 border-2 rounded-sm">
+                          Joined
+                        </p>
+                      ) : (
+                        <button
+                          type="button"
+                          className="bg-blue-400 w-full p-2 text-center rounded-sm"
+                          onClick={() => joinClub(club)}
+                        >
+                          Join
+                        </button>
+                      )}
+                    </>
+                  )}
               </div>
             </div>
           ))}

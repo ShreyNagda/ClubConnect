@@ -34,6 +34,7 @@ function Profile() {
   var client_role = user["client_role"];
   client_role = client_role.replace("_", " ");
 
+  const isLinkClickable = user.client_role === "student";
   return (
     <div className="flex flex-col items-center justify-center p-4 w-full">
       <div className="rounded-full w-32 h-32 overflow-hidden border-2 border-gray-300 shadow-md p-5">
@@ -53,16 +54,25 @@ function Profile() {
 
       <div className="mt-4 border-t border-gray-300 pt-4 w-full md:w-1/2 lg:w-1/4">
         <div className="text-gray-500">Clubs or Societies</div>
-        {user["client_role"] === "student" && user["clubs"].length === 0 ? (
-          <div className="md:flex-row md:flex">
-            <p className="">No Clubs or Societies joined. Join</p>
-            <Link to={"/clubs"} className="text-blue-400 inline-block mx-1">
-              Clubs
-            </Link>
-            or
-            <Link to={"/clubs"} className="text-blue-400 inline-block mx-1">
-              Societes
-            </Link>
+        {user["clubs"].length === 0 ? (
+          <div className=" md:flex">
+            <div>
+              No{" "}
+              <Link
+                to={isLinkClickable ? "/clubs" : null}
+                className="text-blue-400 inline-block mx-1"
+              >
+                Clubs
+              </Link>{" "}
+              or{" "}
+              <Link
+                to={isLinkClickable ? "/societies" : null}
+                className="text-blue-400 inline-block mx-1"
+              >
+                Societes
+              </Link>{" "}
+              joined.
+            </div>
           </div>
         ) : (
           <div>
@@ -84,7 +94,16 @@ function Profile() {
       <div className="mt-4 border-t border-gray-300 pt-4 w-full md:w-1/2 lg:w-1/4">
         <div className="text-gray-500 mb-2">Events Attended</div>
         {user["events_attended"].length <= 0 ? (
-          <div className="w-full">No Events attended</div>
+          <div className="w-full">
+            No{" "}
+            <Link
+              to={isLinkClickable ? "/events" : null}
+              className="text-blue-400 inline-block mx-1"
+            >
+              Events
+            </Link>{" "}
+            attended
+          </div>
         ) : (
           <div className="grid grid-cols-2 gap-4">
             {user["events_attended"].map((event) => (

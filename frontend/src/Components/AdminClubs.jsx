@@ -75,14 +75,15 @@ function AdminClubs() {
             <tr>
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">Established Year</th>
-              <th className="px-4 py-2">Faculty In-charge</th>
               <th className="px-4 py-2">Type</th>
+              <th className="px-4 py-2">Faculty In-charge</th>
+              <th className="px-4 py-2">Club Admin</th>
               <th className="px-4 py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
             {clubs.map((club) => (
-              <tr key={club._id} className="border-b">
+              <tr key={club._id} className="border-b items-center">
                 <td className="px-4 py-2 text-center">{club.name}</td>
                 <td className="px-4 py-2 text-center">
                   {club.established_year}
@@ -91,10 +92,19 @@ function AdminClubs() {
                 <td className="px-4 py-2 text-center">
                   {club.type[0].toUpperCase() + club.type.substring(1)}
                 </td>
-                <td className="px-4 py-2 text-center">
-                  {club.faculty_incharge?.map((incharge) => (
-                    <p className="px-1">{incharge.name}</p>
-                  )) || "N/A"}
+                <td className="px-4 py-2 text-center max-w-15">
+                  {club.faculty_incharge
+                    ? club.faculty_incharge
+                        ?.map((incharge) => incharge.name)
+                        .join(", ")
+                    : "N/A"}
+                </td>
+                <td className="px-4 py-2 text-center max-w-15">
+                  {club.club_admin
+                    ? club.club_admin
+                        ?.map((incharge) => incharge.name)
+                        .join(", ")
+                    : "N/A"}
                 </td>
                 <td className="px-4 py-2 flex">
                   <button
