@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { BiMenu } from "react-icons/bi";
-import { IoClose } from "react-icons/io5";
+import { IoClose, IoPerson } from "react-icons/io5";
 import { useEffect, useState } from "react";
 
 function CheckAdminAndLink() {
@@ -19,25 +19,41 @@ function CheckAdminAndLink() {
   }
   return (window.localStorage.getItem("role") !== null) &
     (window.localStorage.getItem("role") === "admin") ? (
-    <NavLink
-      to="/admin"
-      className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
-    >
-      Admin
-    </NavLink>
+    <>
+      <NavLink
+        to="/admin"
+        className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
+      >
+        Admin
+      </NavLink>
+      <NavLink
+        to="/profile"
+        className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
+      >
+        <IoPerson />
+      </NavLink>
+    </>
   ) : window.localStorage.getItem("role") === "club_admin" ? (
-    <NavLink
-      to="/manage-club"
-      className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
-    >
-      Manage Club
-    </NavLink>
+    <>
+      <NavLink
+        to="/clubs/manage"
+        className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
+      >
+        Manage Club
+      </NavLink>
+      <NavLink
+        to="/profile"
+        className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
+      >
+        <IoPerson size={25} />
+      </NavLink>
+    </>
   ) : (
     <NavLink
       to="/profile"
       className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
     >
-      Profile
+      <IoPerson className="px-2 py-1" />
     </NavLink>
   );
 }
@@ -94,6 +110,7 @@ export default function Nav() {
   const isAdminPage =
     location.pathname === "/admin" ||
     location.pathname === "/logout" ||
+    location.pathname === "/clubs/manage" ||
     location.pathname === "/club/add";
 
   const toggleNavBar = () => setIsOpen(!isOpen);

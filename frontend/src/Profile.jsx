@@ -27,9 +27,12 @@ function Profile() {
   }
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
-  if (!user) {
+  if (!loading && !user) {
     return <>User not found</>;
   }
+
+  var client_role = user["client_role"];
+  client_role = client_role.replace("_", " ");
 
   return (
     <div className="flex flex-col items-center justify-center p-4 w-full">
@@ -44,8 +47,7 @@ function Profile() {
       <a href={`mailto:${user["email"]}`}>{user["email"]}</a>
       {user["client_role"] !== "student" && (
         <div className="text-gray-500 mt-2">
-          {user["client_role"][0].toUpperCase() +
-            user["client_role"].substring(1)}
+          {client_role[0].toUpperCase() + client_role.substring(1)}
         </div>
       )}
 

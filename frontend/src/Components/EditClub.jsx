@@ -9,7 +9,6 @@ import ToggleButton from "../Common/ToggleButton";
 function EditClub() {
   const location = useLocation();
   const clubData = location.state;
-  console.log(clubData["logo"]);
   const filePickerRef = useRef(null);
   const [file, setFile] = useState(clubData["logo"] || null);
   const [previewFile, setPreviewFile] = useState(clubData["logo"] || null);
@@ -53,17 +52,24 @@ function EditClub() {
     ev.preventDefault();
     const facultyData = facultyIncharge.map((user) => user._id);
     const clubAdminData = clubAdmin.map((user) => user._id);
+    console.log(clubAdminData, typeof clubAdminData);
+    console.log(facultyData, typeof facultyData);
     try {
       const formData = new FormData();
       formData.append("name", clubName);
       formData.append("description", desc);
       formData.append("established_year", year);
       formData.append("image", file);
-      formData.append("faculty_incharge", facultyData);
-      formData.append("club_admin", clubAdminData);
+      for (let element of facultyData) {
+        formData.append("faculty_incharge[]", element);
+      }
+      for (let element of clubAdminData) {
+        formData.append("club_admin[]", element);
+      }
       formData.append("type", type);
+      console.log(formData);
       const res = await axios.put(`/clubs/${clubData["_id"]}`, formData);
-      toast.success("Club added successfully!");
+      toast.success("Club updated successfully!");
       navigate(-1);
     } catch (err) {
       toast.error(err.message);
@@ -136,19 +142,25 @@ function EditClub() {
             </div>
           </div>
           <div className="w-full flex items-center rounded-sm">
-            <div className="text-slate-400 mr-2">Select Faculty Incharge</div>
+            <div className="text-slate-400 mr-2 w-[200px]">
+              Select Faculty Incharge
+            </div>
             <SearchableDropdown
               handleChange={handleChange}
               value={facultyIncharge || clubData["faculty_incharge"]}
               type={"faculty"}
+              className={"flex-[4]"}
             />
           </div>
           <div className="w-full flex items-center rounded-sm">
-            <div className="text-slate-400 mr-2">Select Club Admin</div>
+            <div className="text-slate-400 mr-2 w-[200px]">
+              Select Club Admin
+            </div>
             <SearchableDropdown
               handleChange={handleClubAdmin}
               value={clubAdmin || clubData["club_admin"]}
               type={"club_admin"}
+              className={""}
             />
           </div>
           <ToggleButton

@@ -69,7 +69,8 @@ export const loginUser = async (req, res) => {
         user: {
           id: user._id,
           username: user.username,
-          role: user.db_role,
+          role: user.client_role,
+          club_id: user.club_id,
         },
       });
     });

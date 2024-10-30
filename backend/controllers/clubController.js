@@ -1,6 +1,7 @@
 import sharp from "sharp";
 import Club from "../models/club.js";
 import multer from "multer";
+import User from "../models/user.js";
 
 // Multer setup for file handling
 const storage = multer.memoryStorage(); // Store files in memory as buffer
@@ -36,6 +37,7 @@ export const createClub = async (req, res) => {
       established_year,
       type: type || "club",
       faculty_incharge,
+      club_admin: [],
       ...others,
       logo: base64Image ? `data:image/jpeg;base64,${base64Image}` : undefined, // Save as base64
     });
@@ -54,7 +56,8 @@ export const getAllClubs = async (req, res) => {
   try {
     const clubs = await Club.find(req.query)
       .populate("faculty_incharge")
-      .populate("events_conducted");
+      .populate("events_conducted")
+      .populate("club_admin");
     res.json(clubs);
   } catch (error) {
     res
@@ -69,7 +72,8 @@ export const getClubById = async (req, res) => {
     const { clubId } = req.params;
     const club = await Club.findById(clubId)
       .populate("faculty_incharge")
-      .populate("events_conducted");
+      .populate("events_conducted")
+      .populate("club_admin");
 
     if (!club) {
       return res.status(404).json({ message: "Club not found" });
@@ -107,7 +111,27 @@ export const updateClub = async (req, res) => {
       base64Image = compressedImage.toString("base64"); // Convert to base64 string
     }
 
-    console.log(base64Image);
+    if (club_admin) {
+      console.log(club_admin);
+      for (let id of club_admin) {
+        console.log(id);
+        const user = await User.findById(id);
+        console.log(user);
+        if (user.client_role !== "club_admin") {
+          const res = await User.findByIdAndUpdate(
+            id,
+            {
+              client_role: "club_admin",
+              club_id: clubId,
+              clubs: [...(user.clubs || []), clubId],
+            },
+
+            { new: true }
+          );
+          console.log(res);
+        }
+      }
+    }
 
     const updatedClub = await Club.findByIdAndUpdate(
       clubId,
@@ -117,6 +141,7 @@ export const updateClub = async (req, res) => {
         established_year,
         type,
         faculty_incharge,
+        club_admin,
         ...others,
         logo: base64Image ? `data:image/jpeg;base64,${base64Image}` : undefined,
       },
@@ -129,6 +154,7 @@ export const updateClub = async (req, res) => {
 
     res.json(updatedClub);
   } catch (error) {
+    console.log(error);
     res
       .status(500)
       .json({ message: "Error updating club", error: error.message });

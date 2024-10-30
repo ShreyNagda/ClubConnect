@@ -25,6 +25,20 @@ const clubSchema = new mongoose.Schema(
     // Past core teams with year
     past_core_teams: [pastCoreTeamSchema],
     // Faculty In-charge, only allowed if client_role is 'faculty'
+    club_admin: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        validate: {
+          validator: async function (userId) {
+            const User = mongoose.model("User");
+            const user = await User.findById(userId);
+            return user && user.client_role === "club_admin"; // Ensure client_role is 'faculty'
+          },
+          message: 'club_admin must have client_role as "club_admin".',
+        },
+      },
+    ],
     faculty_incharge: [
       {
         type: mongoose.Schema.Types.ObjectId,
