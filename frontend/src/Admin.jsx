@@ -1,26 +1,21 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import AdminCarousel from "./Components/AdminCarousel";
 import AdminClubs from "./Components/AdminClubs";
+import { AuthContext } from "./Context/GlobalContext";
 
 function Admin() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(
     window.localStorage.getItem("activeTab") || "carousel"
   );
-  const [carouselImages, setCarouselImages] = useState([]);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [currentImage, setCurrentImage] = useState(null);
 
-  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
   useEffect(() => {
-    if (!document.cookie.includes("token")) {
-      navigate("/notloggedin");
+    if (user && user.client_role !== "admin") {
+      navigate("/notanadmin");
     }
-    const role = window.localStorage.getItem("role");
-    if (role !== "admin") navigate("/notanadmin");
-  }, [window.localStorage.getItem("role")]);
+  }, [user]);
 
   function changeTab(tab) {
     setActiveTab(tab);
@@ -35,9 +30,9 @@ function Admin() {
       <div className="container mx-auto p-4 hidden md:block">
         <div className="flex justify-around mb-4">
           <button
-            className={`py-2 px-4 ${
+            className={`py-2 px-4 transition-all ${
               activeTab === "carousel"
-                ? "border-blue-400 border-2 rounded-sm"
+                ? "border-b-blue-400 border-b-2 rounded-sm"
                 : "bg-transparent"
             }`}
             onClick={() => changeTab("carousel")}
@@ -45,9 +40,9 @@ function Admin() {
             Carousel Images
           </button>
           <button
-            className={`py-2 px-4 ${
+            className={`py-2 px-4 transition-all ${
               activeTab === "clubs"
-                ? "border-blue-400 border-2 rounded-sm"
+                ? "border-b-blue-400 border-b-2 rounded-sm"
                 : "bg-transparent"
             }`}
             onClick={() => changeTab("clubs")}

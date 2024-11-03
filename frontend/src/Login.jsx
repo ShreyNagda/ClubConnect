@@ -1,13 +1,14 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { AuthContext } from "./Context/GlobalContext";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const navigate = useNavigate();
+  const { setUser } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,13 +19,14 @@ function Login() {
         password,
       });
       toast.success(`Login successfully as ${response.data.user.username}`);
-      window.localStorage.setItem("role", response.data.user.role);
       navigate("/");
+      setUser(response.data.user);
     } catch (error) {
       toast.error(
         `Error logging in: ${error.response?.data.message || error.message}`
       );
     }
+    reset();
   };
 
   function reset() {

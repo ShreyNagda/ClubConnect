@@ -69,7 +69,17 @@ function Club() {
           <div>
             <p>Events Conducted: 5 events</p>
           </div>
-          <p>Past Core Teams: 2 teams</p>
+          <div>
+            <p>Past Core Teams: 2 teams</p>
+          </div>
+          <div>
+            <p>
+              Active Members:{" "}
+              {club.members !== null || club.members !== undefined
+                ? club.members.length
+                : "0"}
+            </p>
+          </div>
         </div>
       )}
     </div>

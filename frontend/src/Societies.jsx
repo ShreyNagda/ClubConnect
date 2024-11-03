@@ -1,17 +1,13 @@
 import axios from "axios";
+import { useContext } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { AuthContext } from "./Context/GlobalContext";
 
 function Societies() {
   const navigate = useNavigate();
-
-  const fetchUser = async () => {
-    if (document.cookie.includes("token")) {
-      const token = document.cookie.split("=")[1];
-      const res = await axios.get(`/users/${token}`);
-    }
-  };
+  const { user } = useContext(AuthContext);
 
   const fetchData = async () => {
     const res = await axios.get("/clubs?type=society");
@@ -39,7 +35,6 @@ function Societies() {
     }
   };
   const { data: clubs, error, loading } = useQuery("societies", fetchData);
-  const { data: user, errorUser, loadingUser } = useQuery("user", fetchData);
 
   if (error) return <div>{error}</div>;
   if (loading)
@@ -79,8 +74,8 @@ function Societies() {
                   View
                 </button>
                 {user &&
-                  (window.localStorage.getItem("role") === "student" ||
-                    window.localStorage.getItem("role") === "club_admin") && (
+                  (user.client_role.toLowerCase() === "student" ||
+                    user.client_role.toLowerCase() === "club_admin") && (
                     <>
                       {user &&
                       user["clubs"].map((c) => c._id).includes(club._id) ? (

@@ -7,7 +7,6 @@ import {
   attendEvent,
   joinClub,
   getAllUsers,
-  makeClubAdmin,
 } from "../controllers/userController.js";
 
 import {
@@ -56,6 +55,6 @@ router.get(
 router.post("/:token/join-club", authMiddleware, joinClub);
 
 // Admin makes a  user a club admin
-router.post("/:token/make-admin", authMiddleware, checkAdmin, makeClubAdmin);
+// router.post("/:token/make-admin", authMiddleware, checkAdmin, makeClubAdmin);
 
 export default router;

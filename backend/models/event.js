@@ -52,6 +52,7 @@ const eventSchema = new mongoose.Schema(
       ref: "Club",
       required: true,
     },
+    tags: [{ type: String }],
     description: {
       type: String,
     },

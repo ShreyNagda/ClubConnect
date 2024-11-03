@@ -1,59 +1,50 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { BiMenu } from "react-icons/bi";
 import { IoClose, IoPerson } from "react-icons/io5";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../Context/GlobalContext";
 
 function CheckRoleAndLink() {
-  if (
-    window.localStorage.getItem("role") &&
-    window.localStorage.getItem("role") === "admin"
-  ) {
-    return (
-      <>
+  const { user } = useContext(AuthContext);
+
+  return (
+    <>
+      {user && user.client_role === "admin" && (
         <NavLink
           to="/admin"
           className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
         >
           Admin
         </NavLink>
+      )}
+      {user &&
+        (user.client_role === "club_admin" ||
+          user.client_role === "faculty") && (
+          <NavLink
+            to="/clubs/manage"
+            className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
+          >
+            Manage Club
+          </NavLink>
+        )}
+      {user ? (
         <NavLink
           to="/profile"
-          className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
+          className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400 flex gap-1 items-center"
         >
-          <IoPerson className="text-2xl" />
+          <IoPerson />
+          <p className="text-base">{user.name}</p>
         </NavLink>
-      </>
-    );
-  } else if (
-    window.localStorage.getItem("role") !== null &&
-    window.localStorage.getItem("role") === "club_admin"
-  ) {
-    return (
-      <>
+      ) : (
         <NavLink
-          to="/clubs/manage"
+          to="/login"
           className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
         >
-          Manage Club
+          Login
         </NavLink>
-        <NavLink
-          to="/profile"
-          className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
-        >
-          <IoPerson className="text-2xl" />
-        </NavLink>
-      </>
-    );
-  } else {
-    return (
-      <NavLink
-        to="/profile"
-        className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
-      >
-        <IoPerson className="text-2xl" />
-      </NavLink>
-    );
-  }
+      )}
+    </>
+  );
 }
 
 function AdminNavLinks() {
@@ -78,25 +69,13 @@ function UserNavLinks() {
       <NavLink to="/" className="aria-[current=page]:text-blue-400">
         Home
       </NavLink>
-      {/* <NavLink to="/events" className="aria-[current=page]:text-blue-400">
-        Events
-      </NavLink> */}
       <NavLink to="/clubs" className="aria-[current=page]:text-blue-400">
         Clubs
       </NavLink>
       <NavLink to="/societies" className="aria-[current=page]:text-blue-400">
         Societies
       </NavLink>
-      {window.localStorage.getItem("role") !== null ? (
-        <CheckRoleAndLink />
-      ) : (
-        <NavLink
-          to="/login"
-          className="px-2 py-1 border-white border-2 text-white rounded-md !aria-[current=page]:text-blue-400 aria-[current=page]:border-blue-400"
-        >
-          Login
-        </NavLink>
-      )}
+      <CheckRoleAndLink />
     </>
   );
 }
@@ -104,34 +83,35 @@ function UserNavLinks() {
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { user } = useContext(AuthContext);
 
-  const isAdminPage =
-    location.pathname === "/admin" ||
-    location.pathname === "/logout" ||
-    location.pathname === "/clubs/manage" ||
-    location.pathname === "/club/add";
+  const isAdminPage = [
+    "/admin",
+    "/logout",
+    "/clubs/manage",
+    "/club/add",
+  ].includes(location.pathname);
 
   const toggleNavBar = () => setIsOpen(!isOpen);
+
   useEffect(() => {
     setIsOpen(false);
   }, [location.pathname]);
 
   return (
-    <>
-      <nav className="flex justify-end">
-        <div className="hidden md:flex w-full justify-between items-center gap-3">
-          {isAdminPage ? <AdminNavLinks /> : <UserNavLinks />}
-        </div>
-        <div className="md:hidden h-6">
-          <button onClick={toggleNavBar}>
-            {isOpen ? (
-              <IoClose className="w-6 h-6" />
-            ) : (
-              <BiMenu className="w-6 h-6" />
-            )}
-          </button>
-        </div>
-      </nav>
+    <nav className="flex justify-end">
+      <div className="hidden md:flex w-full justify-between items-center gap-3">
+        {isAdminPage ? <AdminNavLinks /> : <UserNavLinks />}
+      </div>
+      <div className="md:hidden h-6">
+        <button onClick={toggleNavBar}>
+          {isOpen ? (
+            <IoClose className="w-6 h-6" />
+          ) : (
+            <BiMenu className="w-6 h-6" />
+          )}
+        </button>
+      </div>
       {isOpen && (
         <>
           <hr className="bg-slate-200 h-1 m-2 w-full" />
@@ -140,6 +120,6 @@ export default function Nav() {
           </div>
         </>
       )}
-    </>
+    </nav>
   );
 }

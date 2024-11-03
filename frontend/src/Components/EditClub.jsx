@@ -1,13 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import SearchableDropdown from "../Common/SearchableDropdown";
-import NotLoggedIn from "./NotLoggedIn";
+import NotLoggedIn from "../Common/NotAnAdmin";
 import axios from "axios";
 import { toast } from "react-toastify";
 import ToggleButton from "../Common/ToggleButton";
+import { AuthContext } from "../Context/GlobalContext";
 
 function EditClub() {
   const location = useLocation();
+  const { user } = useContext(AuthContext);
   const clubData = location.state;
   const filePickerRef = useRef(null);
   const [file, setFile] = useState(clubData["logo"] || null);
@@ -52,8 +54,6 @@ function EditClub() {
     ev.preventDefault();
     const facultyData = facultyIncharge.map((user) => user._id);
     const clubAdminData = clubAdmin.map((user) => user._id);
-    console.log(clubAdminData, typeof clubAdminData);
-    console.log(facultyData, typeof facultyData);
     try {
       const formData = new FormData();
       formData.append("name", clubName);
@@ -76,10 +76,7 @@ function EditClub() {
     }
   }
 
-  if (
-    !document.cookie.includes("token") ||
-    window.localStorage.getItem("role") !== "admin"
-  ) {
+  if (user.client_role !== "admin") {
     return <NotLoggedIn />;
   }
   return (
@@ -141,28 +138,19 @@ function EditClub() {
               {file && file !== null ? file.name : "Select Logo"}
             </div>
           </div>
-          <div className="w-full flex items-center rounded-sm">
-            <div className="text-slate-400 mr-2 w-[200px]">
-              Select Faculty Incharge
-            </div>
-            <SearchableDropdown
-              handleChange={handleChange}
-              value={facultyIncharge || clubData["faculty_incharge"]}
-              type={"faculty"}
-              className={"flex-[4]"}
-            />
-          </div>
-          <div className="w-full flex items-center rounded-sm">
-            <div className="text-slate-400 mr-2 w-[200px]">
-              Select Club Admin
-            </div>
-            <SearchableDropdown
-              handleChange={handleClubAdmin}
-              value={clubAdmin || clubData["club_admin"]}
-              type={"club_admin"}
-              className={""}
-            />
-          </div>
+
+          <SearchableDropdown
+            handleChange={handleChange}
+            value={facultyIncharge || clubData["faculty_incharge"]}
+            type={"faculty"}
+            className={"flex-[4]"}
+          />
+          <SearchableDropdown
+            handleChange={handleClubAdmin}
+            value={clubAdmin || clubData["club_admin"]}
+            type={"club_admin"}
+            className={""}
+          />
           <ToggleButton
             onToggle={(value) => setType(value.toLowerCase())}
             value={type}

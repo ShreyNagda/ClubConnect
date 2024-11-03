@@ -11,21 +11,18 @@ import Logout from "./Logout";
 import Admin from "./Admin";
 import Profile from "./Profile";
 import AddClub from "./Components/AddClub";
-import NotAnAdmin from "./Components/NotAnAdmin";
-import NotLoggedIn from "./Components/NotLoggedIn";
+import NotAnAdmin from "./Common/NotAnAdmin";
+import NotLoggedIn from "./Common/NotLoggedIn";
+import NotAClubAdmin from "./Common/NotAClubAdmin";
 import Clubs from "./Clubs";
 import Society from "./Society";
 import Club from "./Club";
 import Societies from "./Societies";
 import EditClub from "./Components/EditClub";
-import NotAClubAdmin from "./Components/NotAClubAdmin";
+import ManageClub from "./ManageClub";
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 axios.defaults.withCredentials = true;
-
-if (!document.cookie.includes("token")) {
-  window.localStorage.removeItem("role");
-}
 
 function App() {
   return (
@@ -61,6 +58,7 @@ function App() {
             <Route path="/notanadmin" Component={NotAnAdmin} />
             <Route path="/notaclubadmin" Component={NotAClubAdmin} />
             <Route path="/notloggedin" Component={NotLoggedIn} />
+            <Route path="/clubs/manage" Component={ManageClub} />
           </Routes>
         </div>
         <Footer />

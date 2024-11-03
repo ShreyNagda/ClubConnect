@@ -9,8 +9,7 @@ const fetchUsers = async () => {
   return data; // Assuming the response contains an array of users
 };
 
-const SearchableDropdown = ({ handleChange, value, type }) => {
-  console.log(value);
+const SearchableDropdown = ({ label, handleChange, value, type }) => {
   const { data: users, isLoading, error } = useQuery("users", fetchUsers);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUsers, setSelectedUsers] = useState(value || []);
@@ -37,15 +36,19 @@ const SearchableDropdown = ({ handleChange, value, type }) => {
       toast.error("Cannot be club admin, Is a " + user.client_role);
     } else {
       setSelectedUsers((prev) => {
-        handleChange([...prev, user]);
-        return [...prev, user];
+        if (!prev.includes(user)) {
+          handleChange([...prev, user]);
+          return [...prev, user];
+        } else {
+          return [...prev];
+        }
       });
     }
     setSearchQuery("");
   };
 
   return (
-    <div className="relative w-full flex-1 flex flex-col">
+    <div className="relative w-full flex">
       {/* Search Input */}
       <input
         type="text"
@@ -78,9 +81,12 @@ const SearchableDropdown = ({ handleChange, value, type }) => {
 
       {/* Display Selected User */}
       {selectedUsers.length !== 0 && (
-        <div className="p-1 rounded-md shadow-md flex gap-2">
+        <div className="p-1 rounded-md shadow-md flex flex-wrap w-full gap-2">
           {selectedUsers.map((user) => (
-            <div className="flex gap-2 rounded-sm m-1 bg-gray-300 p-2 flex-wrap">
+            <div
+              key={user._id}
+              className="flex gap-2 rounded-sm m-1 bg-gray-300 p-2 flex-wrap"
+            >
               <p>{user.name}</p>
               <button
                 type="button"

@@ -1,21 +1,17 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { AuthContext } from "./Context/GlobalContext";
 
 function Logout() {
   const navigate = useNavigate();
+  const { setUser } = useContext(AuthContext);
 
   const logout = async (e) => {
     e.preventDefault();
     toast.success(`Logout successful!`);
-    window.localStorage.removeItem("role");
-    const cookies = document.cookie.split(";");
-
-    cookies.forEach((cookie) => {
-      const cookieName = cookie.split("=")[0].trim();
-      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-    });
+    setUser(null);
     navigate("/");
   };
 

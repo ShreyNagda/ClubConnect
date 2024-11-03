@@ -22,6 +22,7 @@ const clubSchema = new mongoose.Schema(
       type: Map,
       of: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     },
+    members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     // Past core teams with year
     past_core_teams: [pastCoreTeamSchema],
     // Faculty In-charge, only allowed if client_role is 'faculty'
@@ -35,7 +36,7 @@ const clubSchema = new mongoose.Schema(
             const user = await User.findById(userId);
             return user && user.client_role === "club_admin"; // Ensure client_role is 'faculty'
           },
-          message: 'club_admin must have client_role as "club_admin".',
+          message: 'Club Admin must have client_role as "Club Admin".',
         },
       },
     ],

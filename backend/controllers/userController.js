@@ -1,94 +1,17 @@
-import bcrypt from "bcrypt";
 import User from "../models/user.js";
 import Event from "../models/event.js";
 import Club from "../models/club.js";
 import jwt from "jsonwebtoken";
-
-// Create a new user
-export const createUser = async (req, res) => {
-  try {
-    const { name, username, email, phone, password, client_role, db_role } =
-      req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = new User({
-      name,
-      username,
-      email,
-      phone,
-      password: hashedPassword,
-      client_role: client_role || "student",
-      db_role: db_role || "user",
-    });
-    const user = await newUser.save();
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
-      expiresIn: "1d",
-    });
-    res.cookie("token", token, {
-      httpOnly: false,
-      maxAge: 1 * 60 * 60 * 1000,
-    });
-    res.status(201).json({ token, user, role: user.db_role });
-  } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Error creating user", error: err.message });
-  }
-};
-
-//Login to a existing user
-export const loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user =
-      (await User.findOne({ email })) ||
-      (await User.findOne({ username: email }));
-
-    if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
-    }
-
-    bcrypt.compare(password, user.password).then((isMatch) => {
-      if (!isMatch) {
-        return res.status(400).json({ message: "Invalid credentials" });
-      }
-      // Create JWT token
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
-        expiresIn: "1d",
-      });
-
-      // Set token in HTTP-only cookie
-      res.cookie("token", token, {
-        httpOnly: false,
-        maxAge: 1 * 60 * 60 * 1000,
-      });
-
-      res.json({
-        message: "Login successful",
-        token: token,
-        user: {
-          id: user._id,
-          username: user.username,
-          role: user.client_role,
-          club_id: user.club_id,
-        },
-      });
-    });
-  } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-};
 
 // Get a user by ID
 export const getUserById = async (req, res) => {
   try {
     const token = req.params.token;
     const decoded = jwt.decode(token);
-
     const id = decoded.id;
     const user = await User.findById(id)
       .populate("clubs", "name logo events_attended")
-      .populate("events_attended", "name");
+      .populate("events", "name");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -117,7 +40,6 @@ export const getAllUsers = async (req, res) => {
 // Update a user by ID
 export const updateUser = async (req, res) => {
   let file = req.file;
-
   try {
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -197,14 +119,27 @@ export const attendEvent = async (req, res) => {
 
 // Join a Club
 export const joinClub = async (req, res) => {
+  if (!req.cookies.token) {
+    return res
+      .status(501)
+      .json({ message: "You must be logged in to join a club" });
+  }
   try {
     const { clubId } = req.body;
-    const decoded = jwt.decode(req.params.token);
-    const user = await User.findById(decoded.id);
+    const user = await User.findById(req.params.token);
     const club = await Club.findById(clubId);
 
     if (!user || !club) {
       return res.status(404).json({ message: "User or Club not found" });
+    }
+
+    const currentClub = Club.findById(clubId);
+    if (currentClub.members === null || currentClub.members === undefined) {
+      currentClub.members = [];
+    }
+    if (currentClub.members && !currentClub.members.includes(user._id)) {
+      currentClub.members.push(user._id);
+      currentClub.save();
     }
 
     if (!user.clubs.includes(clubId)) {
@@ -215,10 +150,7 @@ export const joinClub = async (req, res) => {
       res.json({ message: "Already joined club" });
     }
   } catch (err) {
+    console.log(err.message);
     res.status(500).json({ message: "Error joining club", error: err.message });
   }
-};
-
-export const makeClubAdmin = (req, res) => {
-  // TO DO: implement making a user admin of a club
 };

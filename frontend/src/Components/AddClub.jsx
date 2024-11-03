@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SearchableDropdown from "../Common/SearchableDropdown";
-import NotLoggedIn from "./NotLoggedIn";
+import NotLoggedIn from "../Common/NotAnAdmin";
 import axios from "axios";
 import { toast } from "react-toastify";
 import ToggleButton from "../Common/ToggleButton";
+import { AuthContext } from "../Context/GlobalContext";
 
 function AddClub({ clubData }) {
   const filePickerRef = useRef(null);
@@ -15,6 +16,7 @@ function AddClub({ clubData }) {
   const [facultyIncharge, setFacultyIncharge] = useState(null);
 
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
 
   const [clubName, setClubName] = useState("");
   const [desc, setDesc] = useState("");
@@ -60,10 +62,7 @@ function AddClub({ clubData }) {
     }
   }
 
-  if (
-    !document.cookie.includes("token") ||
-    window.localStorage.getItem("role") !== "admin"
-  ) {
+  if (user.client_role !== "admin") {
     return <NotLoggedIn />;
   }
   return (

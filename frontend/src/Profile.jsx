@@ -1,54 +1,47 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { IoMdPerson } from "react-icons/io";
+import { AuthContext } from "./Context/GlobalContext";
 
 function Profile() {
-  async function fetchUserData() {
-    const token = document.cookie.split("=")[1];
-    const res = await axios.get(`/users/${token}`);
-    return res.data;
+  const { user } = useContext(AuthContext);
+
+  function formatClientRole(role) {
+    if (user) {
+      if (role.split("_").length > 0) {
+        return role
+          .split("_")
+          .map((word) => word[0].toUpperCase() + word.substring(1))
+          .join(" ");
+      } else {
+        role[0].toUpperCase() + role.substring(1);
+      }
+    }
   }
 
-  const {
-    data: user,
-    error,
-    loading,
-    refetch,
-  } = useQuery("user", fetchUserData);
+  console.log(user);
 
-  useEffect(() => {
-    refetch();
-  }, [window.location.pathname]);
-
-  if (!document.cookie.includes("token")) {
-    return <>Login to view your profile</>;
+  const isLinkClickable = user && user.client_role === "student";
+  if (!user || user === null) {
+    return <div>Not logged in</div>;
   }
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
-  if (!loading && !user) {
-    return <>User not found</>;
-  }
-
-  var client_role = user["client_role"];
-  client_role = client_role.replace("_", " ");
-
-  const isLinkClickable = user.client_role === "student";
   return (
     <div className="flex flex-col items-center justify-center p-4 w-full">
       <div className="rounded-full w-32 h-32 overflow-hidden border-2 border-gray-300 shadow-md p-5">
-        {!user.profile_pic && (
+        {user && user.profile_pic !== undefined ? (
+          <img src={user.profile_pic} alt="profile" />
+        ) : (
           <IoMdPerson className="w-full h-full text-gray-400" />
         )}
-        {user.profile_pic && <img src={user.profile_pic} alt="profile" />}
       </div>
       <div className="text-lg font-semibold mt-4">{user["name"]}</div>
       <div className="text-gray-500">@{user["username"]}</div>
       <a href={`mailto:${user["email"]}`}>{user["email"]}</a>
       {user["client_role"] !== "student" && (
         <div className="text-gray-500 mt-2">
-          {client_role[0].toUpperCase() + client_role.substring(1)}
+          {user.client_role && formatClientRole(user.client_role)}
         </div>
       )}
 
@@ -93,7 +86,7 @@ function Profile() {
       </div>
       <div className="mt-4 border-t border-gray-300 pt-4 w-full md:w-1/2 lg:w-1/4">
         <div className="text-gray-500 mb-2">Events Attended</div>
-        {user["events_attended"].length <= 0 ? (
+        {user["events"].length <= 0 ? (
           <div className="w-full">
             No{" "}
             <Link

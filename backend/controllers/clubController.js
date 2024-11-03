@@ -88,6 +88,7 @@ export const getClubById = async (req, res) => {
 
 // Update a club
 export const updateClub = async (req, res) => {
+  console.log("Update");
   try {
     const { clubId } = req.params;
     const {
@@ -111,8 +112,24 @@ export const updateClub = async (req, res) => {
       base64Image = compressedImage.toString("base64"); // Convert to base64 string
     }
 
+    if (faculty_incharge) {
+      for (let id of faculty_incharge) {
+        const faculty = await User.findById(id);
+        if (faculty.client_role !== "faculty") {
+          const res = await User.findByIdAndUpdate(
+            faculty,
+            {
+              client_role: "faculty",
+              club_id: clubId,
+            },
+            { new: true }
+          );
+          console.log(res);
+        }
+      }
+    }
+
     if (club_admin) {
-      console.log(club_admin);
       for (let id of club_admin) {
         const user = await User.findById(id);
         if (user.client_role !== "club_admin" && user.clubs.includes(clubId)) {
@@ -126,7 +143,6 @@ export const updateClub = async (req, res) => {
 
             { new: true }
           );
-          console.log(res);
         }
       }
     }
@@ -152,7 +168,6 @@ export const updateClub = async (req, res) => {
 
     res.json(updatedClub);
   } catch (error) {
-    console.log(error);
     res
       .status(500)
       .json({ message: "Error updating club", error: error.message });

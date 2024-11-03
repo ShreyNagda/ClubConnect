@@ -1,14 +1,14 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ToggleButton from "./Common/ToggleButton";
+import { AuthContext } from "./Context/GlobalContext";
 
 function Signup() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState("Student"); // Default role is "Student"
@@ -30,8 +30,7 @@ function Signup() {
         email,
         username,
         password,
-        role,
-        phone,
+        role: role.toLowerCase(),
       });
 
       toast.success("Signup successful! Please log in.");
@@ -78,16 +77,6 @@ function Signup() {
             value={email}
             onChange={(ev) => setEmail(ev.target.value)}
             placeholder="Enter email"
-            className="border px-1 py-1 rounded-sm"
-            required
-          />
-          <input
-            type="tel"
-            name="phone"
-            id="phone"
-            value={phone}
-            onChange={(ev) => setPhone(ev.target.value)}
-            placeholder="Enter phone"
             className="border px-1 py-1 rounded-sm"
             required
           />

@@ -1,20 +1,13 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { AuthContext } from "./Context/GlobalContext";
 
 function Clubs() {
   const navigate = useNavigate();
-
-  const fetchUser = async () => {
-    if (document.cookie.includes("token")) {
-      const token = document.cookie.split("=")[1];
-      const res = await axios.get(`/users/${token}`);
-      return res.data;
-    }
-    return Error("Token not found");
-  };
+  const { user, fetchUser } = useContext(AuthContext);
 
   const fetchData = async () => {
     const res = await axios.get("/clubs?type=club");
@@ -22,24 +15,24 @@ function Clubs() {
   };
 
   const joinClub = async (club) => {
-    if (!document.cookie.includes("token")) {
+    if (!user) {
       navigate("/notloggedin");
     }
     try {
-      const token = document.cookie.split("=")[1];
-      const res = await axios.post(`/users/${token}/join-club`, {
+      console.log(user);
+      const res = await axios.post(`/users/${user._id}/join-club`, {
         clubId: club._id,
       });
       toast.success(res.data["message"]);
+      fetchUser();
     } catch (err) {
       toast.error("An error occurred");
     }
   };
-  const { data: clubs, error, loading } = useQuery("clubs", fetchData);
-  const { data: user, errorUser, loadingUser } = useQuery("user", fetchUser);
+  const { data: clubs, clubError, clubLoading } = useQuery("clubs", fetchData);
 
-  if (error) return <div>{error}</div>;
-  if (loading)
+  if (clubError) return <div>{error}</div>;
+  if (clubLoading)
     return (
       <div className="min-h-screen flex items-center justify-center">
         Loading..
@@ -74,8 +67,8 @@ function Clubs() {
                 </Link>
 
                 {user &&
-                  (window.localStorage.getItem("role") === "student" ||
-                    window.localStorage.getItem("role") === "club_admin") && (
+                  (user.client_role.toLowerCase() === "student" ||
+                    user.client_role === "club_admin") && (
                     <>
                       {user &&
                       user["clubs"].map((c) => c._id).includes(club._id) ? (
